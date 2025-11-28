@@ -1,0 +1,136 @@
+# Provider Limits and Restrictions
+
+Our platform offers APIs to connect with various providers, facilitating seamless integration for developers. However, it's crucial to understand and manage the limits and restrictions imposed by each provider to ensure smooth operation of your applications. Below are the limitations and guidelines for interacting with different providers:
+
+# LinkedIn
+
+**These limits are conservative recommendations. You may increase the values at your own risk. Exceeding LinkedIn's limits will result in an HTTP 429 or 500 error. Ensure your system handles this error effectively to avoid warnings related to automation on your user account.**
+
+**To emulate human behavior, it's important to space out all calls rather than chaining them at regular intervals. Use random values and distribute them across multiple launches during working hours.**
+
+**For new or inactive accounts, start with low quantities and increase gradually. Accounts with fewer than ~150 connections or recently created accounts may experience delivery issues with invitations, which may require manual verification by LinkedIn before appear on UI. Fake accounts are well-detected by LinkedIn, even without automation. We strongly recommend using only real accounts.**
+
+_These limits are defined per LinkedIn account. They are independent of the route and do not accumulate_.
+
+**Connection Requests (Invitations):**
+
+* For a paid and active LinkedIn account, you can send between 80 and 100 invitations per day, and approximately 200 per week (with a message of up to 300 characters).
+* For a free account with some history, you can send around 15 invitations per week (with a 200-character message) or up to 150 invitations without adding a note.
+
+_If you hit the invitation limit, LinkedIn will return a specific error 422/cannot_resend_yet. We don't limit on our side, you will have same limit on LinkedIn UI._
+
+**Retrieve a User Profile (Profile Visits/ID conversion):**
+
+~100 profiles per account per day
+
+_If account have Sales Navigator or Recruiter, you can perform an additional requests per account per day by switching "api" parameter in the profile retrieval request.
+[Recruiter Lite have official defined limit of 2000](https://www.linkedin.com/help/recruiter/answer/a497998?hcppcid=search)_
+
+**Search Results:**
+
+There are two separate limits to keep in mind:
+
+1. **Per-search cap (LinkedIn limit)**
+   * Standard LinkedIn: max 1,000 profiles returned for a single search query
+   * Sales Navigator / Recruiter: max 2,500 profiles returned for a single search query
+   * Even if the UI shows more total results, LinkedIn only returns the first 1,000 (or 2,500) for that query. To retrieve all results, filter your query using parameters and perform multiple searches
+2. **Daily usage (Unipile recommendation)**
+   * We recommend limiting the total number of profiles you retrieve per day to 1,000 (standard) or 2,500 (Sales Navigator/Recruiter)
+   * This refers to the sum of profiles actually fetched in a day, not the number of requests
+
+**Relations and Invitation list:**
+
+You might be interested in polling relations or the invitation list to detect accepted invitations. However, we do not recommend polling every hour or at fixed times, such as 8:00 AM daily, as this pattern can be easily flagged as automation. We provide a 'new_relation' webhook that handles this correctly : [https://developer.unipile.com/docs/detecting-accepted-invitations](https://developer.unipile.com/docs/detecting-accepted-invitations)
+
+You can do initial sync, during which you can call the endpoint multiple times, after that, we recommend retrieving the first page only a few times a day with randomly spaced intervals of several hours.
+
+**Chats Retrieving:**
+
+We manage messaging inbox synchronization on the server side, ensuring seamless synchronization of chat lists and messages. This enables users to access and fetch their data without limitations via routes such as Messages, Chats, and Attendees.
+
+**InMail**
+
+The number of InMails a user can send depends on their LinkedIn subscription. For example, Career subscriptions start with 5 InMails per month, while some recruiter contracts include thousands of shared InMails. Even if a user has no remaining credits, they can still send free InMails to open profiles (these can be identified in Recruiter or Sales Navigator via profile retrieval or search results).  However, LinkedIn limit free InMails of around 800  per month per account.
+
+You can check the available credit programmatically using [this route](https://developer.unipile.com/reference/linkedincontroller_getinmailbalance)
+
+We recommend spacing actions randomly and limiting daily sends to 30–50 to maximize the monthly allocation.
+
+**Other Routes:**
+
+For all other unlisted routes, follow the same principles:
+
+* Minimize usage as much as possible.
+* Space out calls at random intervals.
+* By default, limit each action to 100 per day per account (e.g., retrieving company profiles, retrieving posts, sending messages to connections, commenting, or adding reactions..).
+
+## LinkedIn Recruiter
+
+LinkedIn Recruiter has specific limitations on the number of simultaneous sessions. Logging into Unipile using your LinkedIn credentials may trigger a warning from LinkedIn, reminding users not to share account credentials. Users must acknowledge this message. If LinkedIn detects a new session afterward, LinkedIn will display a message listing the current sessions and prompt the user to choose which session to end to continue using LinkedIn in their browser.
+
+While this does not pose a long-term risk to the user's account, it creates a poor user experience as the user will need to reconnect their account to Unipile each time this popup appears.
+
+To avoid this limitation, you can disable the Recruiter feature if it is not specifically needed in your application. This can be done by using the disable_feature parameter in the hosted authentication route.
+
+If the Recruiter feature is required, users must connect their account using cookies. This option is available on the login page but requires users to open their browser's developer tools to retrieve the cookies. For non-technical users, this process needs to be clearly explained.
+
+The best way to handle this is by creating a Chrome extension. This extension would simply ask users to install it, allowing you to collect the necessary cookies in the background. We can provide a basic skeleton for an extension to collect cookies with the appropriate permissions, but you will need to implement additional logic in your backend. You can find more details [here](https://developer.unipile.com/docs/connect-accounts#google-chrome-extension-case).
+
+# WhatsApp
+
+**Connect Accounts with Old Activity:** Avoid using brand new accounts exclusively for software purposes. Instead, utilize WhatsApp accounts with historical activity from real users to prevent account to be suspended. If you use fresh account they can be blocked after 2-3 new chat, they need to be warmup during days with one or two chats.
+
+**Engage Users in Discussion:** Design messages to initiate interaction and encourage replies. The first message should prompt a response to maintain active conversations.
+
+**Respect Delay Between Messages:** Incorporate realistic delays between messages to mimic human behavior. Avoid sending messages with intervals shorter than 10-20 seconds to align with natural conversation patterns.
+
+**Number of new chat creations (outreach):** This is a metric monitored by WhatsApp. If you initiate too many new chats without receiving responses or if there are a high number of signals of spam/block, it may temporarily restrict your account.
+
+For your integration to **conform to a natural behavior**, we recommend to **mark messages as read before you reply to them**
+
+By adhering to these guidelines, developers can optimize their software's WhatsApp integration and potentially send several hundred messages per day per WhatsApp account without violating policies.
+
+# Instagram
+
+To avoid detection of suspicious activity, limit each account to a maximum of 100 actions per day and no more than 10 actions per hour, particularly for activities such as following, outreach, or liking and commenting. If you received lot of inbound message, you can reply to all of them safely, like on UI. For new or inactive accounts, begin with lower activity levels and gradually increase them over time.
+
+To better emulate human behavior, space out all actions randomly instead of executing them at regular intervals. Distribute these actions across multiple time slots during working hours for a more natural pattern.
+
+Instagram may display a warning message such as: “We suspect automated behavior on your account.”
+"To prevent your account from being temporarily restricted or permanently disabled, ensure that no other users or tools have access to your account and that you're following our Terms of Use..."
+
+You can ignore this message and continue using automation, we have not observed additional account restrictions or negative consequences for users who received this warning and continued using our API as usual.
+
+# Facebook
+
+Maximum sending between 10 and 50 requests per day is recommended. It's essential to exclusively send requests to individuals with more than 10 mutual connections to uphold account security. While there is no set limit on friend requests or direct messages (DMs) sent, it's advised not to surpass 50 per day. Following the training guidelines, it's best to start with 15 DMs daily and incrementally increase by 5 each week until reaching the maximum of 50 DMs per day.
+
+# Gmail
+
+**Differences Between Gmail Accounts and Google Workspace:** Gmail accounts can send up to 500 emails per day, while Google Workspace accounts can send up to 2000 per day officially.
+
+**Recommended Sending Limits:** To avoid being flagged or blocked, limit Gmail sending to 50 to 100 emails per day and Workspace sending to 100 to 150. Depending on sending quality, replies, and bounce rate, these limits may be increased up to 150 for Gmail and 300 for Workspace. For new accounts, start with 20 to 50 emails per day and gradually increase.
+
+**API Calls Limits**: Gmail limit the numbers of calls you can do simultaneously shared between all actions, you need to spread your calls across time to not hit these limits (429) : [https://developers.google.com/workspace/gmail/api/reference/quota?hl=fr](https://developers.google.com/workspace/gmail/api/reference/quota?hl=fr)
+
+**Way to increase the limit**: You can create multiple domains in your Google Workspace and link them as aliases to your main email. With our API, you can list aliases and use them as the 'from' address. This will allow you to distribute your reputation across different domains with only one connected Gmail account. [https://support.google.com/a/answer/7502379?hl=en](https://support.google.com/a/answer/7502379?hl=en)
+
+# Outlook
+
+The limits for Microsoft 365 subscribers are:
+
+* Daily recipients: 5,000
+
+* Maximum recipients per message: 500
+
+* Daily non-relationship recipients: 1,000
+
+Limits may vary based on usage history and will be lower for non-subscribers. A “non-relationship recipient” is someone you've never sent email to before. The sending limits of any third party connected accounts depend upon the service provider.
+
+Apart from official recommendations, we advise respecting the "Recommended Sending Limits" in Gmail part.
+
+# Email IMAP
+
+The limitations may vary depending on your email provider. Please refer to your users provider's documentation or inquire with them directly for specific details.
+
+Apart from official recommendations, we advise respecting the "Recommended Sending Limits" in Gmail part

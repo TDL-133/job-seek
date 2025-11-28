@@ -1,0 +1,244 @@
+# Get Raw Data Route Example
+
+Learn how to use Magic  Route
+
+The [Get raw data route](https://developer.unipile.com/reference/linkedincontroller_getrawdata) (Magic route) is intended for advanced users who wish to use LinkedIn's features beyond our current capabilities. It enables you to create custom functionalities that are not yet supported by our platform, using connected accounts. To utilize this route, you will need to identify the specific endpoint containing the desired data using web developer tools on LinkedIn, and then copy the URL along with its parameters for implementation.
+
+# Identify Linkedin Enpoint
+
+* Open your browser's Web Developer Tools and go to the 'Network' tab to capture all requests. Perform the action for which you want to collect data. Identify which request corresponds to the action on LinkedIn, then click on it to view the details.
+* Copy the relevant value into our interactive documentation. For instance, if you're searching for people using LinkedIn's main Search:
+
+<Image align="center" border={false} src="https://files.readme.io/b0ef79e-Screenshot_from_2024-01-19_10-36-08.png" />
+
+* Confirm that you have received the raw data you want by trying it with our interactive documentation.
+* Finally, integrate this data into your code, adjusting the variables for keywords or pagination as necessary.
+
+# Inbox Search
+
+This snippet corresponding to first part of relation search:
+
+<Image align="center" border={false} src="https://files.readme.io/1f517a5-Screenshot_from_2024-06-24_16-12-30.png" />
+
+```curl
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "query_params": {
+    "variables": "(keyword:arnaud,types:List(CONNECTIONS))", 
+"queryId":"voyagerMessagingDashMessagingTypeahead.47f3aa32ab0b43221f99db7c350a2cc3"
+  },
+  "account_id": "dfR-rG0tQfGhfeP2l5_Bdw",
+  "method": "GET",
+  "request_url": "https://www.linkedin.com/voyager/api/graphql",
+  "encoding": false
+}'
+```
+
+# Following someone
+
+You have to change the provider private id in the "request_url" to the id of the person you want to follow
+
+```curl
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "body": {"patch":{"$set":{"following":true}}},
+  "account_id": "dfR-rG0tQfGhfeP2l5_Bdw",
+  "method": "POST",
+  "request_url": "https://www.linkedin.com/voyager/api/feed/dash/followingStates/urn:li:fsd_followingState:urn:li:fsd_profile:ACoAAAcDMMQBODyLwZrRcgYhrkCafURGqva0U4E",
+  "encoding": false
+}'
+```
+
+# Get own profile viewers
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "dfR-rG0tQfGhfeP2l5_Bdw",
+"method": "GET",
+"request_url": "https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(start:0,query:(),analyticsEntityUrn:(activityUrn:urn%3Ali%3Adummy%3A-1),surfaceType:WVMP)&queryId=voyagerPremiumDashAnalyticsObject.c31102e906e7098910f44e0cecaa5b5c",
+"encoding": false
+} '
+```
+
+Profiles are in "data.data.premiumDashAnalyticsObjectByAnalyticsEntity.elements[]" : navigationUrl, title.text (name), subtitle.text, caption.text, label.text (relation level)...
+
+# Social Selling Index
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "dfR-rG0tQfGhfeP2l5_Bdw",
+"request_url": "https://www.linkedin.com/sales-api/salesApiSsi",
+"method": "GET"
+'
+```
+
+# Retrieve posts from Feed
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "91gPYl0eS0q-VE9HA-VLYA",
+"method": "GET",
+"request_url": "https://www.linkedin.com/voyager/api/graphql?queryId=voyagerFeedDashMainFeed.7a50ef8ba5a7865c23ad5df46f735709"
+} 
+```
+
+To manage pagination, you need to retrieve the paginationToken from the result at data.data.feedDashMainFeedByMainFeed.metadata.paginationToken.
+Then, perform a new request using the start, count, and the paginationToken obtained from the previous results.
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "91gPYl0eS0q-VE9HA-VLYA",
+"method": "GET",
+"request_url": "https://www.linkedin.com/voyager/api/graphql?variables=(start:20,count:10,paginationToken:99714011-1754950579467-a40e9db9d667b7ce2ba183fc50169e1b,sortOrder:MEMBER_SETTING)&queryId=voyagerFeedDashMainFeed.7a50ef8ba5a7865c23ad5df46f735709"
+}
+```
+
+# Invite to an event
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "91gPYl0eSeY4IClOgJ5FA",
+"request_url": "https://www.linkedin.com/voyager/api/voyagerRelationshipsDashInvitations",
+"method": "POST",
+"body": {
+"elements": [{
+"inviteeMember": "urn:li:fsd_profile:ACoAACQsq45qSVu3WqOYZw8cueJ0isJ5r9v94",
+"genericInvitationType": "EVENT"
+}]
+},
+"query_params": {
+"inviter": "(eventUrn:urn%3Ali%3Afsd_professionalEvent%3A7315105458780465155)"
+},
+"headers": {
+"x-restli-method": "batch_create"
+},
+"encoding": false
+}
+'
+```
+
+# Delete relation
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "account_id": "91gPYl0eSeY4IClOgJ5FA",
+  "method": "POST",
+  "request_url": "https://www.linkedin.com/voyager/api/relationships/dash/memberRelationships",
+  "query_params": {
+    "action": "removeFromMyConnections",
+    "decorationId": "com.linkedin.voyager.dash.deco.relationships.MemberRelationship-34"
+  },
+  "body": {
+    "connectionUrn": "urn:li:fsd_connection:ACoAACQsq45qSVu3WqOYZw8cueJ0isJ5r9v94"
+  },
+  "encoding": false
+}'
+```
+
+# Invite people to follow your company page
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "91gPYl0eSeY4IClOgJ5FA",
+"request_url": "https://www.linkedin.com/voyager/api/voyagerRelationshipsDashInvitations",
+"method": "POST",
+"body": {"elements":[{"inviteeMember":"urn:li:fsd_profile:ACoAAAAA4McB8YEREZF3LfNq00l1IgqTzd8crg","genericInvitationType":"ORGANIZATION"},{"inviteeMember":"urn:li:fsd_profile:ACoAAAAA3W4B6ERE8pWg_l5gb6bCaBEa_SEGvGc","genericInvitationType":"ORGANIZATION"}]},
+"query_params": {
+"inviter": "(organizationUrn:urn%3Ali%3Afsd_company%3A38114588)"
+},
+"headers": {
+"x-restli-method": "batch_create"
+},
+"encoding": false
+}
+'
+```
+
+# Retrieve group participants
+
+```
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+"account_id": "dfR-rG0tQfGhfeP2l5_Bdw",
+"method": "GET",
+"request_url": "https://www.linkedin.com/voyager/api/graphql?variables=(groupUrn:urn%3Ali%3Afsd_group%3A1781615,filters:List(),typeaheadQuery:%27%27,start:0,count:10,membershipStatuses:List(OWNER,MANAGER,MEMBER))&queryId=voyagerGroupsDashGroupMemberships.ba73dc3bdfac0c95c8488fe4b5715048",
+"encoding": false
+} '
+```
+
+# Delete message
+
+It’s only possible within the first 60 minutes after the message is sent.
+
+```curl
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/linkedin \
+     --header 'X-API-KEY: XXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '
+{
+  "body": {"messageUrn":"urn:li:msg_message:(urn:li:fsd_profile:ACoAAAXxg9sBsVmolZ8Oq_7jEe92IOOpRSI8dPE,2-MTc1OTQyMTE0ODY2N2I2OTcwMy0xMDAmYmNlNTYzYWYtYzg2Mi00NTM2LWE2NmUtNDc1NDgzMTAxOTk5XzAxMA==)"},
+  "account_id": "dfR-rG0tQfGhfeP2l5_Bdw",
+  "method": "POST",
+  "request_url": "https://www.linkedin.com/voyager/api/voyagerMessagingDashMessengerMessages?action=recall",
+  "encoding": false
+}'
+```

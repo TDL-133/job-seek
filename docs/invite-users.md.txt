@@ -1,0 +1,75 @@
+# Invite users
+
+*Feature available for :**Linkedin***
+
+# Send an invitation to a User
+
+If your are not in relation with a user you can invite him to connect.
+
+To send an invitation to a User, use the [`POST /users/invite`](https://developer.unipile.com/reference/userscontroller_adduserbyidentifier) Method or the appropriate SDK Method.
+
+In the `account_id` field, provide the ID of the connected account to send the message from. In the `provider_id` field, give one user's **Provider internal ID**. Please refer to those guides if you need more informations about Users and how their IDs work.
+
+* [Users overview](doc:users-overview)
+* [Retrieving users](doc:retrieving-users)
+
+> Please have a look on [Provider limits and restrictions](https://developer.unipile.com/docs/provider-limits-and-restrictions)
+
+# Example of Inviting Someone on LinkedIn
+
+You need to have already connected your LinkedIn account to proceed with this request. Make sure to use the account\_id in each request. Note that you can't use a new account for testing, as LinkedIn restricts sending invitations from accounts with low connection history or engagement.
+
+## Step 1 - Convert Public ID to Provider ID
+
+For instance, if you want to invite this profile: [https://www.linkedin.com/in/julien-crepieux/](https://www.linkedin.com/in/julien-crepieux/) , you should use only the last part of the URL in the [Retrieve a profile](https://developer.unipile.com/reference/userscontroller_getprofilebyidentifier) route
+
+```curl
+curl --request GET \
+     --url https://{YOUR_DSN}/api/v1/users/julien-crepieux?account_id=3H-KVe-mQ2GT9M0hKSkgHgs \
+     --header 'X-API-KEY: {YOUR_ACCESS_TOKEN}' \
+     --header 'accept: application/json' 
+```
+```typescript Node SDK
+await client.users.getProfile({
+  account_id: '3H-KVe-mQ2GT9M0hKSkgHgs',
+  identifier: 'julien-crepieux',
+});
+```
+
+The response will include the profile information, and you need to collect the provider\_id (ACoAAAcDMMQBODyLwZrRcgYhrkCafURGqva0U4E) for the next step. For example: 
+
+```json
+{
+	"object": "UserProfile",
+	"provider": "LINKEDIN",
+	"provider_id": "ACoAAAcDMMQBODyLwZrRcgYhrkCafURGqva0U4E",
+	"public_identifier": "julien-crepieux",
+	"first_name": "Julien",
+	"last_name": "Crepieux",
+   [...]
+}
+```
+
+## Step 2 - Send the invitation
+
+Now that you have the provider\_id, you can proceed to[ send the invitation](https://developer.unipile.com/reference/userscontroller_adduserbyidentifier)
+
+```curl
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/users/invite \
+     --header 'X-API-KEY: {YOUR_ACCESS_TOKEN}' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{
+    	"provider_id": "ACoAAAcDMMQBODyLwZrRcgYhrkCafURGqva0U4E",
+    	"account_id": "tvKrFOnCQEeTTpO3GNklng",
+        "message": "Hello\nWorld"
+    }'
+```
+```typescript Node SDK
+await client.users.sendInvitation({
+  account_id: '3H-KVe-mQ2GT9M0hKSkgHgs',
+  provider_id: 'ACoAAAcDMMQBODyLwZrRcgYhrkCafURGqva0U4E',
+  message: 'Hello',
+});
+```

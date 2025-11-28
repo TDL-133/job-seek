@@ -1,0 +1,111 @@
+# Posts and Comments
+
+We provide lot of routes to lists posts of a users or a company, retrieve comments of theses posts, retrieve who like this post, you can like the post or a comment or directly comment post. You can use search to search post with some keywords and filters too.
+
+LinkedIn use multiple id for same post, its important to use "social_id" of the post on all action  interaction to be 100% reliable, you can get it from list of posts of a user or if you have only an url of a post, you need to take id of post in URL, use retrieve post route with this id and take in result "social_id" to list or add any comment or reaction.
+
+# Example from URL
+
+For the following post URL : [https://www.linkedin.com/posts/unipile_nocode-automation-solopreneurs-activity-7332661864792854528-hcGT](https://www.linkedin.com/posts/unipile_nocode-automation-solopreneurs-activity-7332661864792854528-hcGT)
+
+You need to retrieve id part in URL **7332661864792854528** to perform [retrieve post request](https://developer.unipile.com/reference/postscontroller_getpost).
+
+_For URL contain ugcPost  (linkedin.com/posts/xxx-ugcPost-7336013677930006817-6jfq) you need to use this format : urn:li:ugcPost:7336013677930006817_
+
+```
+curl --request GET \
+  --url 'https://apiX.unipile.com:XXXX/api/v1/posts/7332661864792854528/?account_id=7ioiu6zHRO67yQBazvXDuQ' \
+  --header 'X-API-KEY: XXXX'
+```
+
+```json
+{
+  "object": "Post",
+  "provider": "LINKEDIN",
+  "social_id": "urn:li:activity:7332661864792854528",
+  "share_url": "https://www.linkedin.com/posts/unipile_nocode-automation-solopreneurs-activity-7332661864792854528-hcGT?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAAcDMMQBODyLwZrRcgYhrkCafURGqva0U4E",
+  "date": "3d",
+  "parsed_datetime": "2025-05-26T19:01:02.468Z",
+  "comment_counter": 0,
+  "impressions_counter": 0,
+  "reaction_counter": 6,
+  "repost_counter": 0,
+  "permissions": {
+    "can_post_comments": true,
+    "can_react": true,
+    "can_share": true
+  },
+  "text": "What’s the #1 automation you rely on as a solo founder or no-code builder?\n\nWhether you're managing outreach, lead [...]",
+  "attachments": [
+    {
+      "id": "D4D22AQE5ozOIW8_vfQ",
+      "sticker": false,
+      "size": { "height": 1002, "width": 800 },
+      "unavailable": false,
+      "type": "img",
+      "url": "https://media.licdn.com/dms/image/v2/D4D22AQE5ozOIW8_vfQ/feedshare-shrink_800/B4DZb9tG7dHEAg-/0/1748013186578?e=1751500800&v=beta&t=4h3iZrbqUdd87EYUeISJ9wcw9fea8pMT9ONNId8hC3o"
+    }
+  ],
+  "author": {
+    "public_identifier": "unipile",
+    "id": null,
+    "name": "Unipile",
+    "is_company": true
+  },
+  "is_repost": false,
+  "id": "7332661864792854528"
+}
+
+```
+
+In result you need to use "social_id":"urn:li:activity:7332661864792854528" to  add or list comment or reaction
+Example post a comment on this post.
+
+```curl
+curl --request POST \
+  --url https://apiX.unipile.com:XXXX/api/v1/posts/urn:li:activity:7332661864792854528/comments \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: XXXX' \
+  --data '{
+  "account_id": "7ioiu6zHRO67yQBazvXDuQ",
+  "text": "Hey",
+}'
+```
+
+# Mentions & Thread comment
+
+You can reply to a specific comment using "comment_id" parameter and use mentions with this syntax/
+
+```curl
+curl --request POST \
+  --url https://apiX.unipile.com:XXXX/api/v1/posts/urn:li:activity:7332661864792854528/comments \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: XXXX' \
+  --data '{  
+"account_id": "7ioiu6zHRO67yQBazvXDuQ",  
+"text": "Hi {{0}}, thanks",  
+"comment_id": "7335000001439513601",  
+"mentions": [  
+{  
+"name": "John Doe",  
+"profile_id": "ACoAASss4UBzQV9fDt_ziQ45zzpCVnAhxbW"  
+}  
+]  
+}'
+```
+
+# Available actions on Posts :
+
+Create a post : [https://developer.unipile.com/reference/postscontroller_createpost](https://developer.unipile.com/reference/postscontroller_createpost)
+
+Add reaction : [https://developer.unipile.com/reference/postscontroller_addpostreaction](https://developer.unipile.com/reference/postscontroller_addpostreaction)
+
+Comment a post : [https://developer.unipile.com/reference/postscontroller_sendcomment](https://developer.unipile.com/reference/postscontroller_sendcomment)
+
+List reactions : [https://developer.unipile.com/reference/postscontroller_listallreactions](https://developer.unipile.com/reference/postscontroller_listallreactions)
+
+List Comments : [https://developer.unipile.com/reference/postscontroller_listallcomments](https://developer.unipile.com/reference/postscontroller_listallcomments)
+
+List all post of a user or a company : [https://developer.unipile.com/reference/userscontroller_listallposts](https://developer.unipile.com/reference/userscontroller_listallposts)
+
+Retrieve a post : [https://developer.unipile.com/reference/postscontroller_getpost](https://developer.unipile.com/reference/postscontroller_getpost)

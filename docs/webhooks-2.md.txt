@@ -1,0 +1,68 @@
+# Webhooks overview
+
+Webhooks in Unipile are a robust feature that enables your application to stay informed in real-time whenever specific events occur within the Unipile system. Unlike periodic polling, where your application checks for updates, webhooks employ a push notification protocol, ensuring that you receive immediate notifications when something changes. Unipile makes webhook integration effortless by sending an HTTP POST request to a URL of your choice, allowing you to configure your application to respond promptly to these notifications.
+
+# Create Webhooks
+
+There is two ways of creating Webhooks:
+
+* Using the [`POST` /webhooks](https://developer.unipile.com/reference/webhookscontroller_createwebhook) Method or the appropriate SDK Method
+* In Unipile's Dashboard
+
+# Retries
+
+Make sure to reply a status code 200 in less than 30sec as a Webhook makes five retry attempts when the HTTP response code is not equal to 200 in less than 30sec, with an incremental time delay between each attempt.
+
+# Webhooks types
+
+Unipile provide four types of Webhooks:
+
+* [Account status updates](https://developer.unipile.com/docs/account-lifecycle)
+* [New messages](https://developer.unipile.com/docs/new-messages-webhook)
+* [New emails](https://developer.unipile.com/docs/new-emails-webhook)
+* [Tracking email](https://developer.unipile.com/docs/tracking-email)
+* [New relation](https://developer.unipile.com/docs/detecting-accepted-invitations#webhook-accepted-invitation)
+
+# Webhook Content-Type
+
+Unlike webhook created from Dashboard, webhook created by API does not contain header content type JSON by default. Some applications like Bubble, Make... need a header content-type to receive good JSON. You can use "headers" parameter to set it.
+
+```curl curl
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/webhooks \
+     --header 'X-API-KEY: XXXXXXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{ 
+  "request_url": "https://endpoint",
+  "source": "messaging",
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ]
+}'
+```
+
+# Authentication
+
+You can add header with a secret key to authenticate webhook coming from Unipile
+
+```curl curl
+curl --request POST \
+     --url https://{YOUR_DSN}/api/v1/webhooks \
+     --header 'X-API-KEY: XXXXXXXX' \
+     --header 'accept: application/json' \
+     --header 'content-type: application/json' \
+     --data '{ 
+  "request_url": "https://endpoint",
+  "source": "messaging",
+  "headers": [
+    {
+      "key": "Unipile-Auth",
+      "value": "yoursecretkey"
+    }
+  ]
+}'
+```
