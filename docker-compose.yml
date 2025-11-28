@@ -15,6 +15,7 @@ services:
       - UNIPILE_API_KEY=${UNIPILE_API_KEY:-}
       - UNIPILE_LINKEDIN_ACCOUNT_ID=${UNIPILE_LINKEDIN_ACCOUNT_ID:-}
       - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY:-}
+      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-}
     depends_on:
       db:
         condition: service_healthy
