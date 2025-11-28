@@ -1,6 +1,30 @@
 # Changelog - Job Seek
 
-## [2025-11-28] - Major Update: V2 Scoring System & Real-Time Search
+## [2025-11-28] - Latest: Firecrawl & BrightData Integration
+
+### 🚀 Enhanced Scraping
+- **ScrapingService** (`src/services/scraping_service.py`) with 3-tier fallback:
+  1. **Firecrawl API** - Fast, anti-bot bypass (~2s, 95% success)
+  2. **BrightData API** - Rotating proxies, CAPTCHA handling (~5s, 99% success)
+  3. **httpx fallback** - Simple HTTP requests (~1s, 30% success)
+- All scrapers (Indeed, Glassdoor, WTTJ) automatically use new service
+- Optional API keys in `.env`: `FIRECRAWL_API_KEY`, `BRIGHTDATA_API_KEY`
+- Comprehensive logging for monitoring which method succeeded
+
+### 📚 Documentation
+- Created `docs/SCRAPING_INTEGRATION.md` - Complete scraping guide
+- Updated `WARP.md` with scraping services section
+- Updated `.env.example` with new API keys and documentation
+
+### 🛠️ Technical Details
+- **BaseScraper** modified to inject `ScrapingService`
+- No changes needed to individual scrapers (Indeed/Glassdoor/WTTJ)
+- Works in production (APIs are server-compatible)
+- Free tier available: Firecrawl 500 req/month
+
+---
+
+## [2025-11-28] - V2 Scoring System & Real-Time Search
 
 ### 🎯 New Features
 

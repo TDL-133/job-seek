@@ -120,6 +120,16 @@ The app uses Unipile API for authenticated LinkedIn job search:
 - Rate limits: ~1000 job searches/day, respect random delays between requests
 - API docs: https://developer.unipile.com/reference
 
+### Scraping Services (Indeed, Glassdoor, WTTJ)
+The app uses professional scraping services with fallback strategy:
+- Service: `src/services/scraping_service.py` - Centralized scraping with 3 methods
+- Strategy: Firecrawl → BrightData → httpx (in order of preference)
+- Optional API keys in `.env`:
+  - `FIRECRAWL_API_KEY` - Fast scraping with anti-bot bypass (https://firecrawl.dev/)
+  - `BRIGHTDATA_API_KEY` - Professional scraping with rotating proxies (https://brightdata.com/)
+- Fallback: Simple httpx if no API keys configured
+- Docs: `docs/SCRAPING_INTEGRATION.md`
+
 ### Test Setup
 Tests use in-memory SQLite via `tests/conftest.py`
 

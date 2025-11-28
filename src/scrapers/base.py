@@ -4,6 +4,8 @@ import httpx
 from bs4 import BeautifulSoup
 import re
 
+from ..services.scraping_service import ScrapingService
+
 
 class BaseScraper(ABC):
     """Base class for job scrapers."""
@@ -15,6 +17,7 @@ class BaseScraper(ABC):
             "Accept-Language": "en-US,en;q=0.5",
         }
         self.platform_name = "base"
+        self.scraping_service = ScrapingService()
     
     @abstractmethod
     async def search(
@@ -29,15 +32,15 @@ class BaseScraper(ABC):
         pass
     
     async def fetch_page(self, url: str) -> Optional[str]:
-        """Fetch a page and return its HTML content."""
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            try:
-                response = await client.get(url, headers=self.headers, follow_redirects=True)
-                response.raise_for_status()
-                return response.text
-            except Exception as e:
-                print(f"Error fetching {url}: {e}")
-                return None
+        """
+        Fetch a page and return its HTML content.
+        
+        Uses ScrapingService with fallback strategy:
+        1. Firecrawl (if API key available)
+        2. BrightData (if API key available)
+        3. httpx simple (always available)
+        """
+        return await self.scraping_service.fetch_page(url)
     
     def parse_salary(self, salary_text: str) -> Dict:
         """Parse salary text into min/max values."""
