@@ -1,0 +1,55 @@
+============================================================
+APIFY ENRICHED CSV ENHANCEMENT REPORT
+============================================================
+Generated: 2025-11-30 17:23:44
+
+SUMMARY
+------------------------------------------------------------
+Total jobs: 75
+Processed: 30
+Enhanced: 0
+Skipped: 45
+Errors: 30
+
+Enhancement Rate: 0.0% (0/30)
+
+BY SOURCE
+------------------------------------------------------------
+Glassdoor: 30 jobs
+Indeed: 16 jobs
+LinkedIn: 20 jobs
+Welcome to the Jungle: 9 jobs
+
+DETAILED RESULTS
+------------------------------------------------------------
+
+❌ ERRORS (30 jobs):
+  Row 30: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 31: **Vos Challenges
+    Reason: no_data_extracted
+  Row 32: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 33: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 34: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 35: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 36: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 37: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 38: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+  Row 39: Product Manager (Title Unknown)
+    Reason: no_data_extracted
+
+⏭️  SKIPPED (45 jobs):
+  already_complete: 12 jobs
+  indeed_blocked: 13 jobs
+  linkedin_encrypted: 20 jobs
+
+============================================================
+END OF REPORT
+============================================================

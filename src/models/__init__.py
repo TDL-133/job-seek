@@ -9,6 +9,7 @@ from .scoring_criteria import ScoringCriteria, CriteriaType, DEFAULT_CRITERIA
 from .scoring_preferences import UserScoringPreferences, DEFAULT_SCORING_PREFERENCES
 from .blacklist import Blacklist
 from .email_alert import EmailAlert
+from .saved_search import SavedSearch
 
 __all__ = [
     "Base",
@@ -29,4 +30,5 @@ __all__ = [
     "DEFAULT_SCORING_PREFERENCES",
     "Blacklist",
     "EmailAlert",
+    "SavedSearch",
 ]

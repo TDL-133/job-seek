@@ -6,15 +6,15 @@ import enum
 
 
 class ApplicationStatus(enum.Enum):
-    SAVED = "saved"
-    APPLIED = "applied"
-    PHONE_SCREEN = "phone_screen"
-    INTERVIEW = "interview"
-    TECHNICAL = "technical"
-    FINAL_ROUND = "final_round"
-    OFFER = "offer"
-    REJECTED = "rejected"
-    WITHDRAWN = "withdrawn"
+    SAVED = "SAVED"
+    APPLIED = "APPLIED"
+    PHONE_SCREEN = "PHONE_SCREEN"
+    INTERVIEW = "INTERVIEW"
+    TECHNICAL = "TECHNICAL"
+    FINAL_ROUND = "FINAL_ROUND"
+    OFFER = "OFFER"
+    REJECTED = "REJECTED"
+    WITHDRAWN = "WITHDRAWN"
 
 
 class Application(Base):
@@ -49,6 +49,9 @@ class Application(Base):
     rejection_reason = Column(Text)
     
     # Relationships
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user = relationship("User", backref="applications")
+    
     job_id = Column(Integer, ForeignKey("jobs.id"))
     job = relationship("Job", back_populates="applications")
     

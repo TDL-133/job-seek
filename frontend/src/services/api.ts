@@ -8,6 +8,7 @@ import type {
   BlacklistEntry,
   Application
 } from '../types';
+import { useAuthStore } from '../store/authStore';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -32,8 +33,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      window.location.href = '/login';
+      // Use zustand logout to clear both token AND isAuthenticated state
+      // This prevents the redirect loop caused by persisted isAuthenticated=true
+      useAuthStore.getState().logout();
+      // No hard redirect needed - React Router will handle it
     }
     return Promise.reject(error);
   }
@@ -209,18 +212,32 @@ export const blacklistApi = {
 
 // Applications API
 export const applicationsApi = {
-  list: async (): Promise<Application[]> => {
-    const response = await api.get('/applications/');
+  list: async (params?: { status?: string }): Promise<{ applications: Application[]; total: number }> => {
+    const response = await api.get('/applications/', { params });
     return response.data;
   },
   
-  create: async (data: { job_id: number; status?: string }): Promise<Application> => {
+  get: async (id: number): Promise<Application> => {
+    const response = await api.get(`/applications/${id}`);
+    return response.data;
+  },
+  
+  create: async (data: { job_id: number; status?: string; notes?: string }): Promise<Application> => {
     const response = await api.post('/applications/', data);
     return response.data;
   },
   
   update: async (id: number, data: Partial<Application>): Promise<Application> => {
     const response = await api.put(`/applications/${id}`, data);
+    return response.data;
+  },
+  
+  delete: async (id: number): Promise<void> => {
+    await api.delete(`/applications/${id}`);
+  },
+  
+  markApplied: async (id: number): Promise<Application> => {
+    const response = await api.post(`/applications/${id}/apply`);
     return response.data;
   },
   
@@ -324,6 +341,37 @@ export const scoredJobsApi = {
 export const coverLetterApi = {
   generate: async (jobId: number): Promise<{ cover_letter: string }> => {
     const response = await api.post(`/cover-letter/generate/${jobId}`);
+    return response.data;
+  },
+};
+
+// Saved Searches API
+export interface SavedSearch {
+  id: number;
+  name: string;
+  keywords: string;
+  location: string;
+  created_at: string;
+  last_used_at: string;
+}
+
+export const savedSearchesApi = {
+  list: async (): Promise<{ searches: SavedSearch[]; total: number }> => {
+    const response = await api.get('/saved-searches/');
+    return response.data;
+  },
+  
+  save: async (data: { name: string; keywords: string; location: string }): Promise<SavedSearch> => {
+    const response = await api.post('/saved-searches/', data);
+    return response.data;
+  },
+  
+  delete: async (id: number): Promise<void> => {
+    await api.delete(`/saved-searches/${id}`);
+  },
+  
+  markUsed: async (id: number): Promise<SavedSearch> => {
+    const response = await api.put(`/saved-searches/${id}/use`);
     return response.data;
   },
 };

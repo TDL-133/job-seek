@@ -1,0 +1,220 @@
+{
+  "object": "LinkedinSearch",
+  "items": [
+    {
+      "type": "JOB",
+      "id": "4324809246",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (Hybrid)",
+      "posted_at": "2025-11-28T12:27:36.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4324809246",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "9372063",
+        "name": "JD Ross Energy",
+        "public_identifier": "jdr-energy",
+        "profile_url": "https://www.linkedin.com/company/jdr-energy",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQGc9JFpsXlkiQ/company-logo_100_100/B4EZfKMh7hGwAQ-/0/1751443972356/jdr_energy_logo?e=1766016000&v=beta&t=T9sZweA0E9yfnP3TkiJTqUrKcA4Yr79dCVEu8V_TItY"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4347655008",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager, AI/ML",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France",
+      "posted_at": "2025-11-26T18:19:35.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4347655008",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "17142",
+        "name": "Hexagon Manufacturing Intelligence",
+        "public_identifier": "hexagon-manufacturing-intelligence",
+        "profile_url": "https://www.linkedin.com/company/hexagon-manufacturing-intelligence",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4D0BAQEkZS_UyfRW0A/company-logo_100_100/B4DZdz3TlqHAAQ-/0/1749995567817/hexagon_manufacturing_intelligence_logo?e=1766016000&v=beta&t=2vQ5KY1pfo7SDw6HVxWU2caU7wKNPYgQP-2E1X3iniE"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4307563055",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager - Assurance (F/H)",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (Hybrid)",
+      "posted_at": "2025-11-05T12:25:16.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4307563055",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "35623",
+        "name": "ASI \u00ae",
+        "public_identifier": "asi-informatique",
+        "profile_url": "https://www.linkedin.com/company/asi-informatique",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4D0BAQGZZ3qopqccWA/company-logo_200_200/company-logo_200_200/0/1634026260981/asi_informatique_logo?e=1766016000&v=beta&t=VXEJxkh1t9B5JtCSbkYXhcIEUM04BQIBgODobtJ4yXY"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4336968414",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager PV & Utility - France",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (On-site)",
+      "posted_at": "2025-11-19T12:03:28.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4336968414",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "11841205",
+        "name": "Sungrow Europe",
+        "public_identifier": "sungroweurope",
+        "profile_url": "https://www.linkedin.com/company/sungroweurope",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4D0BAQEHfBghUtmEKA/company-logo_200_200/company-logo_200_200/0/1630485879167/sungrowemea_logo?e=1766016000&v=beta&t=HovRyq7Yt2eyZJW26bCss2tUsi67W9FQ2R9qQFeXNes"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4187046152",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager (Research Engineer)",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (On-site)",
+      "posted_at": "2025-11-14T11:03:09.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4187046152",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "24015",
+        "name": "Medpace",
+        "public_identifier": "medpace",
+        "profile_url": "https://www.linkedin.com/company/medpace",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4D0BAQGpkjmvNr4wHA/company-logo_200_200/company-logo_200_200/0/1630505623260/medpace_logo?e=1766016000&v=beta&t=KSrFFbhE5yJdRVcb-3DuJzPD9JBeFtqGSDaHQYmjF5A"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4322885662",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager Claims \u2013 CDI \u2013 H/F/NB",
+      "location": "Greater Lyon Area (Hybrid)",
+      "posted_at": "2025-11-17T10:00:30.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4322885662",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "3107140",
+        "name": "Sant\u00e9vet",
+        "public_identifier": "sant-vet",
+        "profile_url": "https://www.linkedin.com/company/sant-vet",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQHnUF4GmMJQJw/company-logo_400_400/B4EZf5.FewHEAo-/0/1752245492781?e=1766016000&v=beta&t=2dkKbmkdCC6R5l1lec2mzzR_zTgrPtMq53WSI3bMkA4"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4339355890",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Owner/Product Manager F/H",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (On-site)",
+      "posted_at": "2025-11-10T13:00:31.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4339355890",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "314194",
+        "name": "APRIL",
+        "public_identifier": "april-assurances",
+        "profile_url": "https://www.linkedin.com/company/april-assurances",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQGb5pjBS1--UQ/company-logo_200_200/company-logo_200_200/0/1630649899979/april_assurances_logo?e=1766016000&v=beta&t=Fba1N2eexKOJLIcjU_CloYVSCrlFkZINZhFE6vVb_gg"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4300844533",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager Content Lifecycle - Lyon or Paris - FR/ENG - Freelance",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (Hybrid)",
+      "posted_at": "2025-09-15T10:01:51.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4300844533",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "69713279",
+        "name": "Collective.work",
+        "public_identifier": "usecollective",
+        "profile_url": "https://www.linkedin.com/company/usecollective",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQFEckvgRHvOkA/company-logo_200_200/company-logo_200_200/0/1631718407504/usecollective_logo?e=1766016000&v=beta&t=5dOc_VYIG1QA6uBgCNncyP5gDwfZVAEvw0AxInJBLTU"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4339853431",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Product Manager (B2B)",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (Hybrid)",
+      "posted_at": "2025-11-28T20:38:30.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4339853431",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "10424439",
+        "name": "Alan",
+        "public_identifier": "avec-alan",
+        "profile_url": "https://www.linkedin.com/company/avec-alan",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4D0BAQHC5r2QBWDy8w/company-logo_200_200/company-logo_200_200/0/1667470432110/avec_alan_logo?e=1766016000&v=beta&t=3rJ1dIuQqiv91aM2SoFZuNcFaqeepXt_un5ljUQtA5I"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4347874191",
+      "reference_id": "g9nQJ25obp0JqodVKvSOcg==",
+      "title": "Junior Product Manager, 3-month CDA",
+      "location": "Lyon, Auvergne-Rh\u00f4ne-Alpes, France (On-site)",
+      "posted_at": "2025-11-28T20:00:26.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4347874191",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "164525",
+        "name": "Jazz Pharmaceuticals",
+        "public_identifier": "jazz-pharmaceuticals",
+        "profile_url": "https://www.linkedin.com/company/jazz-pharmaceuticals",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQF0qr81j7SIQQ/company-logo_200_200/company-logo_200_200/0/1719831716592/jazz_pharmaceuticals_logo?e=1766016000&v=beta&t=onoEDoIpIqBR23WgdyVu1baHx71dyMWuqkdjafjkKS4"
+      }
+    }
+  ],
+  "config": {
+    "params": {
+      "api": "classic",
+      "category": "jobs",
+      "keywords": "\"Product Manager\" AND \"Lyon\"",
+      "limit": 30,
+      "count": 30
+    }
+  },
+  "paging": {
+    "start": 0,
+    "page_count": 10,
+    "total_count": 23
+  },
+  "cursor": "eyJhY2NvdW50X2lkIjoiNmFyaUg1aFlRZjJLcTZVaExWRzZVUSIsImxpbWl0IjoxMCwic3RhcnQiOjEwLCJwYXJhbXMiOnsiYXBpIjoiY2xhc3NpYyIsImNhdGVnb3J5Ijoiam9icyIsImtleXdvcmRzIjoiXCJQcm9kdWN0IE1hbmFnZXJcIiBBTkQgXCJMeW9uXCIiLCJsaW1pdCI6MzAsImNvdW50IjozMH19"
+}

@@ -1,0 +1,28 @@
+
+============================================================
+APIFY CITY VALIDATOR - ENHANCEMENT REPORT
+============================================================
+Target City: Toulouse
+Total Jobs: 75
+Timestamp: 2025-11-30T14:40:51.451363
+
+## Location Detection
+  Unknown locations (before): 41
+  Unknown locations (after):  41
+  Improvement: 0 jobs
+
+## Company Detection
+  Unknown companies (before): 61
+  Unknown companies (after):  61
+  Improvement: 0 jobs
+
+## Apify Enhancement Stats
+  Jobs enhanced: 0
+  Jobs skipped (Indeed): 15
+  Jobs failed: 0
+
+## Location Source Distribution
+  firecrawl: 45
+  none: 30
+
+============================================================

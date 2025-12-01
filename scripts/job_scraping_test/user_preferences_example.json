@@ -1,0 +1,32 @@
+{
+  "preferred_city": "lille",
+  "target_seniority": "senior",
+  "min_salary": 60000,
+  "priority_skills": [
+    "Python",
+    "AI",
+    "Machine Learning",
+    "Product Strategy",
+    "Agile",
+    "Scrum",
+    "Data Analysis"
+  ],
+  "cv_skills": [
+    "API Design",
+    "REST",
+    "SQL",
+    "PostgreSQL",
+    "Analytics",
+    "Data Visualization",
+    "Product Management",
+    "User Research",
+    "A/B Testing",
+    "Roadmapping"
+  ],
+  "trusted_sources": {
+    "linkedin": true,
+    "glassdoor": true,
+    "indeed": false,
+    "wttj": true
+  }
+}

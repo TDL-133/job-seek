@@ -14,8 +14,10 @@ services:
       - UNIPILE_DSN=${UNIPILE_DSN:-https://api21.unipile.com:15160}
       - UNIPILE_API_KEY=${UNIPILE_API_KEY:-}
       - UNIPILE_LINKEDIN_ACCOUNT_ID=${UNIPILE_LINKEDIN_ACCOUNT_ID:-}
+      - PARALLEL_API_KEY=${PARALLEL_API_KEY:-}
       - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY:-}
       - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-}
+      - BRIGHTDATA_MCP_URL=${BRIGHTDATA_MCP_URL:-https://mcp.brightdata.com/sse}
     depends_on:
       db:
         condition: service_healthy

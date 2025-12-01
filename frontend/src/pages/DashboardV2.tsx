@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
 import { scoredJobsApi, type ScoredJob, type ScoreBreakdown } from '../services/api';
 import { 
-  Loader2, MapPin, Building2, Clock, ExternalLink, 
-  FileText, Ban, ChevronDown, ChevronUp, Sparkles, RefreshCw,
-  Eye, EyeOff
+  Loader2, MapPin, Clock, ExternalLink, 
+  ChevronDown, ChevronUp, Sparkles,
+  Briefcase, Ban, Heart, Check
 } from 'lucide-react';
-import { api } from '../services/api';
+import { api, applicationsApi } from '../services/api';
 import { SearchPanel } from '../components/SearchPanel';
 
 // Score breakdown component
@@ -105,43 +106,41 @@ function ScoreBreakdownPanel({ breakdown }: { breakdown: ScoreBreakdown }) {
   );
 }
 
-// Seniority badge
-function SeniorityBadge({ level, label }: { level: string; label: string }) {
-  const colors: Record<string, string> = {
-    head: 'bg-purple-100 text-purple-700 border-purple-200',
-    senior: 'bg-green-100 text-green-700 border-green-200',
-    mid: 'bg-blue-100 text-blue-700 border-blue-200',
-    junior: 'bg-amber-100 text-amber-700 border-amber-200',
-    unknown: 'bg-neutral-100 text-neutral-600 border-neutral-200',
-  };
-  
-  const emojis: Record<string, string> = {
-    head: '👑',
-    senior: '⭐',
-    mid: '💼',
-    junior: '🌱',
-    unknown: '❓',
-  };
-  
-  return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${colors[level] || colors.unknown}`}>
-      {emojis[level] || emojis.unknown} {label}
-    </span>
-  );
-}
-
-// Match threshold - jobs with score >= this are considered "matched"
-const MATCH_THRESHOLD = 40;
+// Clean location string
+const cleanLocation = (location: string | null | undefined): string => {
+  if (!location) return 'Non spécifié';
+  // Remove GPS coordinates like "50.62920, 3.05726" or "; 50.5667, 3.0667"
+  let cleaned = location.replace(/;?\s*\d+\.\d+,\s*\d+\.\d+/g, '');
+  // Remove "NA, NA" patterns
+  cleaned = cleaned.replace(/,?\s*NA,?\s*NA/g, '');
+  // Remove trailing commas, semicolons and whitespace
+  cleaned = cleaned.replace(/[,;\s]+$/g, '').trim();
+  // Remove leading commas, semicolons
+  cleaned = cleaned.replace(/^[,;\s]+/g, '').trim();
+  // If nothing left, return default
+  return cleaned || 'Non spécifié';
+};
 
 export default function DashboardV2() {
+  const [searchParams] = useSearchParams();
   const [jobs, setJobs] = useState<ScoredJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [total, setTotal] = useState(0);
+  
+  // URL query params for saved search navigation
+  const urlKeywords = searchParams.get('keywords') || '';
+  const urlLocation = searchParams.get('location') || '';
+  
+  // Location filter from URL (active when coming from saved search)
+  const [locationFilter, setLocationFilter] = useState<string>(urlLocation);
+  
+  // Update location filter when URL changes
+  useEffect(() => {
+    setLocationFilter(urlLocation);
+  }, [urlLocation]);
   
   // Filters
   const [minScore, setMinScore] = useState<number>(0);
-  const [showUnmatched, setShowUnmatched] = useState(true);
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   
   // Cover letter
@@ -149,17 +148,15 @@ export default function DashboardV2() {
   const [coverLetter, setCoverLetter] = useState('');
   const [generatingCoverLetter, setGeneratingCoverLetter] = useState(false);
   
+  // Saved jobs tracking
+  const [savedJobIds, setSavedJobIds] = useState<Set<number>>(new Set());
+  const [savingJobId, setSavingJobId] = useState<number | null>(null);
+  
   // Initial load
   useEffect(() => {
     loadJobs();
+    loadSavedJobs();
   }, []);
-  
-  // Re-load when filters change
-  useEffect(() => {
-    if (!loading) {
-      loadJobs();
-    }
-  }, [minScore]);
   
   const loadJobs = useCallback(async () => {
     setLoading(true);
@@ -172,7 +169,6 @@ export default function DashboardV2() {
         min_score: undefined // Load ALL jobs
       });
       setJobs(data.jobs);
-      setTotal(data.total);
     } catch (err: any) {
       console.error('Error loading jobs:', err);
       setError('Erreur lors du chargement des offres');
@@ -181,18 +177,69 @@ export default function DashboardV2() {
     }
   }, []);
   
+  const loadSavedJobs = useCallback(async () => {
+    try {
+      const data = await applicationsApi.list();
+      const ids = new Set(data.applications.map(app => app.job_id));
+      setSavedJobIds(ids);
+    } catch (err) {
+      console.error('Error loading saved jobs:', err);
+    }
+  }, []);
+  
+  const handleSaveJob = async (jobId: number) => {
+    if (savedJobIds.has(jobId)) return;
+    
+    setSavingJobId(jobId);
+    try {
+      await applicationsApi.create({ job_id: jobId, status: 'SAVED' });
+      setSavedJobIds(prev => new Set([...prev, jobId]));
+    } catch (err: any) {
+      if (err.response?.status !== 400) { // Ignore "already saved" errors
+        setError('Erreur lors de la sauvegarde');
+      }
+    } finally {
+      setSavingJobId(null);
+    }
+  };
+  
+  // Handle search completion - add new jobs from FindAll
+  const handleSearchComplete = useCallback((newScoredJobs?: any[]) => {
+    if (newScoredJobs && newScoredJobs.length > 0) {
+      // Convert to ScoredJob format and add to state
+      const formattedJobs: ScoredJob[] = newScoredJobs.map(j => ({
+        job: j.job,
+        score: j.score,
+        breakdown: j.breakdown
+      }));
+      
+      // Merge with existing jobs (avoid duplicates)
+      const existingIds = new Set(jobs.map(j => j.job.id));
+      const trulyNewJobs = formattedJobs.filter(j => !existingIds.has(j.job.id));
+      
+      if (trulyNewJobs.length > 0) {
+        const mergedJobs = [...trulyNewJobs, ...jobs].sort((a, b) => b.score - a.score);
+        setJobs(mergedJobs);
+      }
+    } else {
+      // No jobs from search, reload from DB
+      loadJobs();
+    }
+  }, [jobs, loadJobs]);
+  
   // Filter jobs based on current settings
   const filteredJobs = jobs.filter(job => {
+    // Apply location filter (from saved search click)
+    if (locationFilter) {
+      const jobLocation = (job.job.location || '').toLowerCase();
+      const filterLower = locationFilter.toLowerCase();
+      // Match if job location contains the filter city
+      if (!jobLocation.includes(filterLower)) return false;
+    }
     // Apply minScore filter
     if (minScore > 0 && job.score < minScore) return false;
-    // Hide unmatched if toggle is off
-    if (!showUnmatched && job.score < MATCH_THRESHOLD) return false;
     return true;
   });
-  
-  // Count matched and unmatched
-  const matchedCount = jobs.filter(j => j.score >= MATCH_THRESHOLD).length;
-  const unmatchedCount = jobs.filter(j => j.score < MATCH_THRESHOLD).length;
   
   const handleGenerateCoverLetter = async (job: ScoredJob) => {
     const jobId = job.job.id;
@@ -210,8 +257,8 @@ export default function DashboardV2() {
     }
   };
   
-  const handleBlacklistCompany = async (job: ScoredJob) => {
-    const company = job.job.company;
+  const handleBlacklistCompany = async (scoredJob: ScoredJob) => {
+    const company = scoredJob.job.company;
     if (!company) return;
     
     try {
@@ -222,52 +269,57 @@ export default function DashboardV2() {
     }
   };
   
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-100 border-green-200';
-    if (score >= 60) return 'text-primary-600 bg-primary-100 border-primary-200';
-    if (score >= 40) return 'text-amber-600 bg-amber-100 border-amber-200';
-    return 'text-neutral-600 bg-neutral-100 border-neutral-200';
+const getScoreColor = (score: number) => {
+    if (score >= 80) return { ring: 'stroke-green-500', text: 'text-green-600', bg: 'bg-green-50' };
+    if (score >= 60) return { ring: 'stroke-amber-500', text: 'text-amber-600', bg: 'bg-amber-50' };
+    if (score >= 40) return { ring: 'stroke-orange-500', text: 'text-orange-600', bg: 'bg-orange-50' };
+    return { ring: 'stroke-red-400', text: 'text-red-500', bg: 'bg-red-50' };
+  };
+  
+  const getScoreLabel = (score: number) => {
+    if (score >= 80) return { label: 'Excellent', color: 'bg-green-100 text-green-700 border-green-200' };
+    if (score >= 60) return { label: 'Bien', color: 'bg-amber-100 text-amber-700 border-amber-200' };
+    if (score >= 40) return { label: 'Moyen', color: 'bg-orange-100 text-orange-700 border-orange-200' };
+    return { label: 'Faible', color: 'bg-red-100 text-red-600 border-red-200' };
   };
   
   return (
     <MainLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-900">🎯 Recherche d'emploi</h1>
-            <p className="text-neutral-600">
-              Trouvez les offres qui correspondent à votre profil
-            </p>
-          </div>
-          <button
-            onClick={loadJobs}
-            disabled={loading}
-            className="btn-secondary flex items-center gap-2"
-          >
-            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            Actualiser scores
-          </button>
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-900">Recommended Jobs</h1>
+          <p className="text-neutral-500">
+            {filteredJobs.length > 0 
+              ? `${filteredJobs.length} position${filteredJobs.length > 1 ? 's' : ''} match your profile`
+              : 'Lancez une recherche pour voir les offres'
+            }
+          </p>
         </div>
         
         {/* Search Panel */}
         <SearchPanel 
-          onSearchComplete={loadJobs}
-          defaultKeywords="Product Manager"
-          defaultLocation="Paris"
+          onSearchComplete={handleSearchComplete}
+          defaultKeywords={urlKeywords || 'Product Manager'}
+          defaultLocation={urlLocation || 'Toulouse'}
         />
         
-        {/* Stats */}
-        {total > 0 && (
-          <div className="flex flex-wrap gap-4">
-            <div className="px-4 py-2 rounded-lg bg-green-50 text-green-800 text-sm">
-              ✅ <span className="font-medium">{matchedCount}</span> offre{matchedCount > 1 ? 's' : ''} matched (score ≥ {MATCH_THRESHOLD})
-            </div>
-            <div className="px-4 py-2 rounded-lg bg-neutral-100 text-neutral-600 text-sm">
-              📋 <span className="font-medium">{unmatchedCount}</span> offre{unmatchedCount > 1 ? 's' : ''} à revoir (score &lt; {MATCH_THRESHOLD})
-            </div>
+        {/* Active location filter badge */}
+        {locationFilter && (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 border border-blue-200">
+            <MapPin className="h-4 w-4 text-blue-600" />
+            <span className="text-sm text-blue-800">
+              Filtre actif: <strong>{locationFilter}</strong> ({filteredJobs.length} offre{filteredJobs.length > 1 ? 's' : ''})
+            </span>
+            <button
+              onClick={() => setLocationFilter('')}
+              className="ml-auto px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors"
+            >
+              ✕ Voir toutes les offres
+            </button>
           </div>
         )}
+        
         
         {/* Filters */}
         <div className="card">
@@ -285,22 +337,6 @@ export default function DashboardV2() {
                 <option value={80}>80+ (Excellent)</option>
               </select>
             </div>
-            
-            {/* Show/hide unmatched toggle */}
-            <button
-              onClick={() => setShowUnmatched(!showUnmatched)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                showUnmatched 
-                  ? 'bg-neutral-100 text-neutral-700' 
-                  : 'bg-neutral-200 text-neutral-500'
-              }`}
-            >
-              {showUnmatched ? (
-                <><Eye className="h-4 w-4" /> Offres non-matched visibles</>
-              ) : (
-                <><EyeOff className="h-4 w-4" /> Offres non-matched masquées</>
-              )}
-            </button>
             
             {/* Score legend */}
             <div className="flex items-center gap-3 text-xs ml-auto">
@@ -351,136 +387,177 @@ export default function DashboardV2() {
             {filteredJobs.map((scoredJob) => {
               const job = scoredJob.job;
               const isExpanded = expandedJob === job.id;
-              const isMatched = scoredJob.score >= MATCH_THRESHOLD;
+              const scoreColors = getScoreColor(scoredJob.score);
+              const scoreLabel = getScoreLabel(scoredJob.score);
+              const scorePercent = Math.min(100, scoredJob.score);
+              const circumference = 2 * Math.PI * 36; // radius 36
+              const strokeDashoffset = circumference - (scorePercent / 100) * circumference;
               
               return (
                 <div 
                   key={job.id} 
-                  className={`card hover:shadow-md transition-shadow ${
-                    !isMatched ? 'opacity-75 border-l-4 border-l-neutral-300' : 'border-l-4 border-l-green-500'
-                  }`}
+                  className="bg-white rounded-xl border border-neutral-200 p-5 hover:shadow-lg transition-all duration-200"
                 >
-                  <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-                    {/* Score + Match badge */}
-                    <div className="lg:w-24 flex lg:flex-col items-center gap-2">
-                      <div className={`w-16 h-16 rounded-xl flex flex-col items-center justify-center font-bold border-2 ${getScoreColor(scoredJob.score)}`}>
-                        <span className="text-2xl">{Math.round(scoredJob.score)}</span>
-                        <span className="text-[10px] uppercase tracking-wide opacity-70">pts</span>
-                      </div>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        isMatched 
-                          ? 'bg-green-100 text-green-700' 
-                          : 'bg-neutral-100 text-neutral-500'
-                      }`}>
-                        {isMatched ? '✅ Match' : '📋 À revoir'}
-                      </span>
-                    </div>
-                    
-                    {/* Job info */}
+                  <div className="flex gap-5">
+                    {/* Job info - left side */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <h3 className="font-semibold text-neutral-900">
-                              {job.title}
-                            </h3>
-                            {/* Seniority badge */}
-                            <SeniorityBadge 
-                              level={scoredJob.breakdown.role.level}
-                              label={scoredJob.breakdown.role.label}
-                            />
-                          </div>
-                          
-                          <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-600">
-                            {job.company && (
-                              <span className="flex items-center gap-1">
-                                <Building2 className="h-4 w-4" />
-                                {job.company}
-                              </span>
-                            )}
-                            {job.location && (
-                              <span className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" />
-                                {job.location}
-                              </span>
-                            )}
-                            {job.source && (
-                              <span className="flex items-center gap-1 text-neutral-400">
-                                📡 {job.source}
-                              </span>
-                            )}
-                            {job.posted_at && (
-                              <span className="flex items-center gap-1">
-                                <Clock className="h-4 w-4" />
-                                {new Date(job.posted_at).toLocaleDateString('fr-FR')}
-                              </span>
-                            )}
-                          </div>
+                      {/* Title */}
+                      <h3 className="text-lg font-semibold text-neutral-900 mb-1">
+                        {job.title}
+                      </h3>
+                      
+                      {/* Company */}
+                      <p className="text-neutral-600 mb-3">
+                        {job.company || 'À déterminer'}
+                      </p>
+                      
+                      {/* Meta info */}
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-500 mb-4">
+                        <span className="flex items-center gap-1.5">
+                          <MapPin className="h-4 w-4" />
+                          {cleanLocation(job.location)}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Briefcase className="h-4 w-4" />
+                          CDI
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Clock className="h-4 w-4" />
+                          {job.posted_at ? new Date(job.posted_at).toLocaleDateString('fr-FR') : 'Date inconnue'}
+                        </span>
+                      </div>
+                      
+                      {/* Salary if available */}
+                      {scoredJob.breakdown.salary.salary && (
+                        <p className="text-neutral-900 font-medium mb-4">
+                          {scoredJob.breakdown.salary.salary}€ / an
+                        </p>
+                      )}
+                      
+                      {/* Score details inline */}
+                      <div className="text-sm text-neutral-600 mb-4">
+                        <p className="font-medium text-neutral-700 mb-1">Détail du score:</p>
+                        <div className="flex flex-wrap gap-x-6 gap-y-1">
+                          <span>Rôle: {scoredJob.breakdown.role.points}</span>
+                          <span>Compétences: {scoredJob.breakdown.skills.points}</span>
+                          <span>Géo: {scoredJob.breakdown.geography.points}</span>
+                          <span>Attractivité: {scoredJob.breakdown.attractiveness.points}</span>
+                          <span>Salaire: {scoredJob.breakdown.salary.points}</span>
+                          <span className={scoredJob.breakdown.penalties.points < 0 ? 'text-red-600' : ''}>
+                            Pénalités: {scoredJob.breakdown.penalties.points}
+                          </span>
                         </div>
                       </div>
                       
-                      {/* Quick score summary */}
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        <span className="text-xs px-2 py-1 rounded bg-neutral-100 text-neutral-600">
-                          {scoredJob.breakdown.geography.details}
-                        </span>
-                        {scoredJob.breakdown.salary.salary && (
-                          <span className="text-xs px-2 py-1 rounded bg-green-50 text-green-700">
-                            {scoredJob.breakdown.salary.details}
-                          </span>
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-3">
+                        {/* Save/Candidature button */}
+                        <button
+                          onClick={() => handleSaveJob(job.id)}
+                          disabled={savedJobIds.has(job.id) || savingJobId === job.id}
+                          className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors ${
+                            savedJobIds.has(job.id)
+                              ? 'bg-green-100 text-green-700 border border-green-200 cursor-default'
+                              : 'bg-primary-500 text-white hover:bg-primary-600'
+                          }`}
+                        >
+                          {savingJobId === job.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : savedJobIds.has(job.id) ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Heart className="h-4 w-4" />
+                          )}
+                          {savedJobIds.has(job.id) ? 'Sauvegradé' : 'Candidater'}
+                        </button>
+                        
+                        {job.source_url && (
+                          <a
+                            href={job.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 text-sm text-neutral-700 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            Voir l'offre
+                          </a>
                         )}
-                        {scoredJob.breakdown.skills.matched > 0 && (
-                          <span className="text-xs px-2 py-1 rounded bg-purple-50 text-purple-700">
-                            {scoredJob.breakdown.skills.matched} skills matchés
-                          </span>
-                        )}
-                        {scoredJob.breakdown.attractiveness.level !== 'low' && (
-                          <span className="text-xs px-2 py-1 rounded bg-amber-50 text-amber-700">
-                            {scoredJob.breakdown.attractiveness.details}
-                          </span>
-                        )}
-                        {scoredJob.breakdown.penalties.points < 0 && (
-                          <span className="text-xs px-2 py-1 rounded bg-red-50 text-red-600">
-                            {scoredJob.breakdown.penalties.points} pts
-                          </span>
-                        )}
+                        <button
+                          onClick={() => handleGenerateCoverLetter(scoredJob)}
+                          className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-neutral-900 text-white rounded-lg hover:bg-neutral-800 transition-colors"
+                        >
+                          <span>✏️</span>
+                          Générer lettre
+                        </button>
+                        <button
+                          onClick={() => handleBlacklistCompany(scoredJob)}
+                          className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Blacklister cette entreprise"
+                        >
+                          <Ban className="h-4 w-4" />
+                        </button>
                       </div>
                     </div>
                     
-                    {/* Actions */}
-                    <div className="flex lg:flex-col gap-2">
-                      {job.source_url && (
-                        <a
-                          href={job.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-primary text-sm"
-                        >
-                          <ExternalLink className="h-4 w-4 mr-1" />
-                          Voir
-                        </a>
+                    {/* Score circle - right side */}
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="relative w-24 h-24">
+                        {/* Background circle */}
+                        <svg className="w-24 h-24 transform -rotate-90">
+                          <circle
+                            cx="48"
+                            cy="48"
+                            r="36"
+                            fill="none"
+                            stroke="#f3f4f6"
+                            strokeWidth="6"
+                          />
+                          {/* Progress circle */}
+                          <circle
+                            cx="48"
+                            cy="48"
+                            r="36"
+                            fill="none"
+                            className={scoreColors.ring}
+                            strokeWidth="6"
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={strokeDashoffset}
+                            style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+                          />
+                        </svg>
+                        {/* Score text */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <span className={`text-2xl font-bold ${scoreColors.text}`}>
+                            {Math.round(scoredJob.score)}
+                          </span>
+                          <span className="text-xs text-neutral-400">/ 100</span>
+                        </div>
+                      </div>
+                      
+                      {/* Score label badge */}
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full border ${scoreLabel.color}`}>
+                        {scoreLabel.label}
+                      </span>
+                      
+                      {/* Score adjustment if penalties */}
+                      {scoredJob.breakdown.penalties.points < 0 && (
+                        <div className="text-xs text-neutral-500 text-center">
+                          <span className="block">Score ajusté</span>
+                          <span className="text-neutral-400 line-through">
+                            {Math.round(scoredJob.score - scoredJob.breakdown.penalties.points)}
+                          </span>
+                          <span className="mx-1">→</span>
+                          <span className={scoreColors.text}>{Math.round(scoredJob.score)}</span>
+                        </div>
                       )}
-                      <button
-                        onClick={() => handleGenerateCoverLetter(scoredJob)}
-                        className="btn-secondary text-sm"
-                      >
-                        <FileText className="h-4 w-4 mr-1" />
-                        Lettre
-                      </button>
-                      <button
-                        onClick={() => handleBlacklistCompany(scoredJob)}
-                        className="btn-ghost text-sm text-neutral-500 hover:text-red-600"
-                        title="Blacklister cette entreprise"
-                      >
-                        <Ban className="h-4 w-4" />
-                      </button>
                     </div>
                   </div>
                   
                   {/* Expand/collapse for full breakdown */}
                   <button
                     onClick={() => setExpandedJob(isExpanded ? null : job.id)}
-                    className="mt-4 pt-4 border-t border-neutral-100 w-full flex items-center justify-center gap-1 text-sm text-neutral-600 hover:text-primary-600"
+                    className="mt-4 pt-4 border-t border-neutral-100 w-full flex items-center justify-center gap-1 text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
                   >
                     {isExpanded ? (
                       <>

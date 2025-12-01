@@ -8,6 +8,7 @@ interface AuthState {
   profile: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isHydrated: boolean; // Track if zustand has finished hydrating from localStorage
   error: string | null;
   
   // Actions
@@ -18,6 +19,7 @@ interface AuthState {
   fetchProfile: () => Promise<void>;
   setProfile: (profile: UserProfile) => void;
   clearError: () => void;
+  setHydrated: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -27,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
       profile: null,
       isAuthenticated: false,
       isLoading: false,
+      isHydrated: false,
       error: null,
       
       login: async (email: string, password: string) => {
@@ -127,12 +130,20 @@ export const useAuthStore = create<AuthState>()(
       clearError: () => {
         set({ error: null });
       },
+      
+      setHydrated: () => {
+        set({ isHydrated: true });
+      },
     }),
     {
       name: 'auth-storage',
       partialize: (state) => ({ 
         isAuthenticated: state.isAuthenticated 
       }),
+      onRehydrateStorage: () => (state) => {
+        // Called when hydration is complete
+        state?.setHydrated();
+      },
     }
   )
 );
