@@ -165,7 +165,7 @@ async def search_findall_stream(
             progress = None
             last_keepalive = asyncio.get_event_loop().time()
             
-            for progress in findall_service.poll_status(findall_id):
+            async for progress in findall_service.poll_status(findall_id):
                 current_time = asyncio.get_event_loop().time()
                 elapsed = int(current_time - start_time)
                 

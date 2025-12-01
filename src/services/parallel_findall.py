@@ -2,8 +2,8 @@
 Service for interacting with Parallel FindAll API for comprehensive job searches.
 """
 import os
-import time
-from typing import Dict, Any, List, Optional, Generator
+import asyncio
+from typing import Dict, Any, List, Optional, AsyncGenerator
 from parallel import Parallel
 from sqlalchemy.orm import Session
 
@@ -72,14 +72,14 @@ class ParallelFindAllService:
         
         return findall_run.findall_id
     
-    def poll_status(
+    async def poll_status(
         self,
         findall_id: str,
         poll_interval: int = 10,
         max_iterations: int = 120
-    ) -> Generator[Dict[str, Any], None, None]:
+    ) -> AsyncGenerator[Dict[str, Any], None]:
         """
-        Poll FindAll run status and yield progress updates.
+        Poll FindAll run status and yield progress updates (async).
         
         Args:
             findall_id: The FindAll run ID
@@ -117,8 +117,8 @@ class ParallelFindAllService:
                 if status in terminal_statuses:
                     break
                 
-                # Wait before next poll
-                time.sleep(poll_interval)
+                # Wait before next poll (non-blocking)
+                await asyncio.sleep(poll_interval)
                 
             except Exception as e:
                 yield {
