@@ -1,0 +1,1050 @@
+parallel doc for findall
+
+
+# pip install parallel-web
+
+from parallel import Parallel
+
+client = Parallel(api_key="TDevMkqIQNpuo5aTwTn5FAJ9BcKRpSk394Otl5pv")
+
+FINDALL_BETA = "findall-2025-09-15"
+
+# Create FindAll Run
+findall_run = client.beta.findall.create(
+    objective="Find all jobs for product manager in bordeaux, France on the Glassdoor and Welcome to the jungle website
+",
+    entity_type="jobs",
+    match_conditions=[
+  {
+    "name": "product_manager_role_check",
+    "description": "Job must be for a 'product manager' role."
+  },
+  {
+    "name": "bordeaux_france_location_check",
+    "description": "Job must be located in Bordeaux, France."
+  },
+  {
+    "name": "glassdoor_or_wttj_check",
+    "description": "Job must be listed on Glassdoor or Welcome to the Jungle websites."
+  }
+],
+    generator="core",
+    match_limit=10,
+    betas=[FINDALL_BETA]
+)
+
+print(f"Created findall run with ID: {findall_run.findall_id}")
+
+
+# pip install parallel-web
+
+from parallel import Parallel
+import time
+
+client = Parallel(api_key="TDevMkqIQNpuo5aTwTn5FAJ9BcKRpSk394Otl5pv")
+
+FINDALL_BETA = "findall-2025-09-15"
+
+# Poll FindAll Run Status
+status = "queued"
+terminal_statuses = ["completed", "failed", "cancelled"]
+
+while status not in terminal_statuses:
+    findall_run = client.beta.findall.retrieve(
+        findall_id="findall_3b9bcb767a82472f8ee31f45325ee9ba",
+        betas=[FINDALL_BETA],
+    )
+    status = findall_run.status.status
+    print(f"FindAll run findall_3b9bcb767a82472f8ee31f45325ee9ba status: {status}")
+
+    if status not in terminal_statuses:
+        time.sleep(10)
+
+# Get FindAll Run Result
+run_result = client.beta.findall.result(
+    findall_id="findall_3b9bcb767a82472f8ee31f45325ee9ba",
+    betas=[FINDALL_BETA],
+)
+print(f"FindAll run findall_3b9bcb767a82472f8ee31f45325ee9ba result: {run_result.model_dump_json(indent=2)}")
+
+
+
+# pip install parallel-web
+
+from parallel import Parallel
+
+client = Parallel(api_key="TDevMkqIQNpuo5aTwTn5FAJ9BcKRpSk394Otl5pv")
+
+FINDALL_BETA = "findall-2025-09-15"
+
+# Enrich FindAll Run - Enrichment 1
+enrichment_1 = [
+  {
+    "processor": "core",
+    "output_schema": {
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "offer_status": {
+            "type": "string",
+            "description": "The current status of the offer. Return 'Online' if the offer is still active and accessible via the provided URL. Return 'Offline' if the offer is no longer available, the URL is broken, or the content has been removed. Return 'Uncertain' if the status cannot be definitively determined due to technical issues or ambiguous content. If the offer is online, ensure the content matches the description provided in the input. If the offer is offline, specify the reason (e.g., 'Page not found', 'Offer expired', 'Content removed')."
+          },
+          "last_checked_date": {
+            "type": "string",
+            "description": "The date when the offer's status was last checked. Format as YYYY-MM-DD. If the date cannot be determined, return 'Date unknown'."
+          },
+          "status_details": {
+            "type": "string",
+            "description": "Additional details regarding the offer's status, especially if it is 'Offline' or 'Uncertain'. This field should provide a brief explanation (1-2 sentences) of why the offer is offline or why its status is uncertain. If the offer is 'Online', this field can be left empty or state 'Offer is active and accessible.'."
+          }
+        }
+      }
+    }
+  }
+]
+
+client.beta.findall.enrich(
+    findall_id="findall_3b9bcb767a82472f8ee31f45325ee9ba",
+    enrichments=enrichment_1,
+    betas=[FINDALL_BETA]
+)
+
+
+
+# pip install parallel-web
+
+from parallel import Parallel
+
+client = Parallel(api_key="TDevMkqIQNpuo5aTwTn5FAJ9BcKRpSk394Otl5pv")
+
+FINDALL_BETA = "findall-2025-09-15"
+
+# Extend FindAll Run
+client.beta.findall.extend(
+    findall_id="findall_3b9bcb767a82472f8ee31f45325ee9ba",
+    additional_match_limit=10,
+    betas=[FINDALL_BETA]
+)
+
+
+
+# pip install parallel-web
+
+from parallel import Parallel
+
+client = Parallel(api_key="TDevMkqIQNpuo5aTwTn5FAJ9BcKRpSk394Otl5pv")
+
+FINDALL_BETA = "findall-2025-09-15"
+
+# Extend FindAll Run
+client.beta.findall.extend(
+    findall_id="findall_3b9bcb767a82472f8ee31f45325ee9ba",
+    additional_match_limit=10,
+    betas=[FINDALL_BETA]
+)
+
+
+
+# Candidates
+
+> Understanding FindAll candidates, their structure, states, and how to exclude specific entities
+
+## Overview
+
+A **candidate** is an entity that FindAll discovers during the generation phase of a run. Each candidate represents a potential match that is evaluated against your match conditions.
+
+### Candidate States
+
+Candidates progress through these states during evaluation:
+
+* **Generated**: Discovered from web data, queued for evaluation
+* **Matched**: Successfully satisfied all match conditions
+* **Unmatched**: Failed to satisfy one or more match conditions
+
+<Note>
+  **Post-Match Events**: When using [Streaming Events](/findall-api/features/findall-sse) or [Webhooks](/findall-api/features/findall-webhook), you may receive **`enriched`** events for matched candidates. These are event types (not `match_status` values) that indicate when additional data has been extracted via enrichments after a candidate has already matched.
+</Note>
+
+## Candidate Object Structure
+
+Every candidate in FindAll results, SSE events, and webhook payloads follows this structure:
+
+| Property       | Type               | Description                                                                                                                                                  |
+| -------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `candidate_id` | string             | Unique identifier for the candidate                                                                                                                          |
+| `name`         | string             | Name of the entity                                                                                                                                           |
+| `url`          | string             | Primary URL for the entity                                                                                                                                   |
+| `description`  | string             | Brief description of the entity                                                                                                                              |
+| `match_status` | enum               | One of `generated`, `matched`, and `unmatched`                                                                                                               |
+| `output`       | object             | Key-value pairs showing evaluation results for each match condition and enrichment (see section below for more details)                                      |
+| `basis`        | array\[FieldBasis] | Citations, reasoning, and confidence scores for each field. See [FieldBasis](/task-api/guides/access-research-basis#the-fieldbasis-object) for more details. |
+
+### Understanding the `output` Field
+
+The `output` field contains evaluation results where each key corresponds to a field name. Match conditions include an `is_matched` boolean, while enrichments do not:
+
+```json  theme={"system"}
+{
+  "founded_after_2020_check": {
+    "value": "2021",
+    "type": "match_condition",
+    "is_matched": true // only match_condition contains boolean field is_match
+  },
+  "ceo_name": {
+    "value": "Ramin Hasani",
+    "type": "enrichment"
+  }
+}
+```
+
+### Understanding the `basis` Field
+
+The `basis` field provides citations, reasoning, and confidence scores for each field in `output`.
+
+<Note>
+  **For complete details on basis structure and usage**, see [Access Research Basis](/task-api/guides/access-research-basis).
+</Note>
+
+## Excluding Candidates
+
+**Use case**: Excluding candidates is useful when you already know certain entities match your criteria (such as results from previous runs or entities you've already identified), allowing you to focus on discovering new matches. By excluding these known entities, you won't be charged for generating or evaluating them again, making your searches more cost-effective.
+
+<Note>
+  FindAll uses intelligence to deduplicate and disambiguate candidates you provide in the exclude list, which handles aliases and entities with slightly different names or URL variations. However, using the most official and disambiguated name and URL is recommended for best results.
+</Note>
+
+Provide an `exclude_list` to prevent specific entities from being generated or evaluated. Excluded entities won't incur evaluation costs or appear in results/events.
+
+**Exclude list structure:** Array of objects with `name` (string) and `url` (string) fields.
+
+```bash  theme={"system"}
+curl -X POST "https://api.parallel.ai/v1beta/findall/runs" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objective": "FindAll portfolio companies of Khosla Ventures",
+    "match_conditions": [...],
+    "exclude_list": [
+      {"name": "Figure AI", "url": "https://www.figure.ai"},
+      {"name": "Anthropic", "url": "https://www.anthropic.com"}
+    ]
+  }'
+```
+
+## Retrieving Candidates
+
+Candidates can be accessed through multiple methods:
+
+* **[`/result` endpoint](/findall-api/findall-quickstart#step-4-get-results)**: Retrieve all candidates (matched and unmatched) after run completion
+* **[Streaming Events](/findall-api/features/findall-sse)**: Stream candidates in real-time as they're generated and evaluated
+* **[Webhooks](/findall-api/features/findall-webhook)**: Receive HTTP callbacks for candidate events
+
+## Related Topics
+
+* **[FindAll Quickstart](/findall-api/findall-quickstart)**: Get started with FindAll API
+* **[Generators and Pricing](/findall-api/core-concepts/findall-generator-pricing)**: Understand generator options and pricing
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: Learn about run statuses and metrics
+* **[Enrichments](/findall-api/features/findall-enrich)**: Extract additional data from matched candidates
+* **[Streaming Events](/findall-api/features/findall-sse)**: Monitor candidates in real-time
+* **[Webhooks](/findall-api/features/findall-webhook)**: Set up notifications for candidate events
+* **[Access Research Basis](/task-api/guides/access-research-basis)**: Deep dive into citation and reasoning structure
+
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://docs.parallel.ai/llms.txt
+
+
+
+# Preview
+
+Preview mode lets you quickly and inexpensively test your FindAll queries with a small sample of candidates before committing to a full run. It's ideal for validating your match conditions and enrichments.
+
+**When to use preview:**
+
+* Test query structure before running on large datasets
+* Validate match conditions work as expected
+* Iterate quickly on FindAll schema and descriptions
+
+## How Preview Works
+
+Preview mode uses the same API endpoint as regular FindAll runs, but with `processor: preview`. It generates approximately 10 evaluated candidates (both matched and unmatched) to give you a representative sample of results.
+
+## Preview vs. Full Run
+
+| Feature                  | Preview Mode   | Full Run                          |
+| ------------------------ | -------------- | --------------------------------- |
+| **Processor**            | `preview`      | `base`, `core`, `pro`             |
+| **Candidates Generated** | \~10 evaluated | Until `match_limit` matches found |
+| **Match Limit**          | Up to 10       | 5 to 1000 (inclusive)             |
+| **Speed**                | Fast (minutes) | Slower (varies by generator)      |
+| **Cost**                 | Flat, cheap    | Variable, higher                  |
+| **Outputs**              | Full           | Full                              |
+| **Enrichments**          | ❌ No           | ✅ Yes                             |
+| **Can Extend**           | ❌ No           | ✅ Yes                             |
+| **Can Cancel**           | ❌ No           | ✅ Yes                             |
+
+### Key Characteristics
+
+* **Fast & Cost-Effective**: Much faster and cheaper than full runs
+* **Sample Size**: Generates \~10 evaluated candidates with no guarantee of match rate
+* **Full Outputs**: Candidates include full match outputs, reasoning, and citations (just like regular runs)
+* **Capped Limit**: `match_limit` is capped at 10 and interpreted as candidates to evaluate, not matches to find
+* **No Modifications**: Cannot be extended or cancelled after creation
+
+<Note>
+  Preview candidates follow the same structure as full run candidates. See [Candidates](/findall-api/core-concepts/findall-candidates) for details on candidate object structure and fields.
+</Note>
+
+## Quick Example
+
+```bash  theme={"system"}
+curl -X POST "https://api.parallel.ai/v1beta/findall/runs" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objective": "FindAll portfolio companies of Khosla Ventures founded after 2020",
+    "entity_type": "companies",
+    "match_conditions": [
+      {
+        "name": "khosla_ventures_portfolio_check",
+        "description": "Company must be a portfolio company of Khosla Ventures."
+      },
+      {
+        "name": "founded_after_2020_check",
+        "description": "Company must have been founded after 2020."
+      }
+    ],
+    "generator": "preview",
+    "match_limit": 10
+  }'
+```
+
+## Best Practices
+
+1. **Always Preview First**: Run preview to validate match conditions before committing to full searches
+2. **Review Both Results**: Check matched and unmatched candidates to refine your query logic
+3. **Test Enrichments Early**: Validate enrichment outputs in preview before running at scale
+4. **Examine Reasoning**: Review the `basis` field to understand how matches were determined
+5. **Iterate Quickly**: Use preview's fast feedback loop to refine queries before full runs
+
+## Related Topics
+
+* **[Quickstart Guide](/findall-api/findall-quickstart)**: Get started with FindAll API
+* **[Generators and Pricing](/findall-api/core-concepts/findall-generator-pricing)**: Understand generator options and pricing
+* **[Enrichments](/findall-api/features/findall-enrich)**: Extract additional structured data for matched candidates
+* **[Extend Runs](/findall-api/features/findall-extend)**: Increase match limits without paying new fixed costs
+* **[Streaming Events](/findall-api/features/findall-sse)**: Receive real-time updates via Server-Sent Events
+* **[Webhooks](/findall-api/features/findall-webhook)**: Configure HTTP callbacks for run completion and matches
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: Understand run statuses and how to cancel runs
+* **[API Reference](https://docs.parallel.ai/api-reference/findall-api-beta/create-findall-run)**: Complete endpoint documentation
+
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://docs.parallel.ai/llms.txt
+
+
+# Enrichments
+
+> Add non-boolean enrichment data to FindAll candidates without affecting match conditions
+
+<Note>
+  **Built on Task API**: FindAll enrichments are powered by our [Task API](/task-api/task-quickstart). All Task API concepts—including [task specifications](/task-api/guides/specify-a-task), [processors](/task-api/guides/choose-a-processor), [output schemas](/task-api/guides/specify-a-task#output-schema), and pricing—apply directly to enrichments. We handle the orchestration automatically, running tasks on each matched candidate.
+</Note>
+
+## Overview
+
+FindAll enrichments allow you to extract additional non-boolean information about candidates that should not be used as filters for matches. For example, if you're finding companies, you might want to extract the CEO name as pure enrichment data—something you want to know about each match, but not something that should affect whether a candidate matches your criteria.
+
+## Match Conditions vs. Enrichments
+
+Understanding the distinction between match conditions and enrichments is fundamental to using FindAll effectively.
+
+|                       | **Match Conditions**                                                                                                                         | **Enrichments**                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Purpose**           | Required criteria that determine whether a candidate is a match                                                                              | Additional data fields extracted only for matched candidates                                                       |
+| **When Executed**     | During FindAll generation and evaluation process                                                                                             | **Only on matched candidates** using the Task API                                                                  |
+| **Output format**     | Boolean (yes/no) + extracted value                                                                                                           | String values (by default)                                                                                         |
+| **Type of Criteria**  | Must be boolean/filterable (yes/no questions)                                                                                                | Can be any type of data extraction                                                                                 |
+| **Affects Matching?** | ✅ Yes - determines which candidates reach `matched` status                                                                                   | ❌ No - does not affect which candidates match                                                                      |
+| **When to Add**       | Must be defined when creating the run                                                                                                        | Can be added when creating the run, or multiple times after                                                        |
+| **Example Questions** | • "Is the company founded after 2020?"<br />• "Has the company raised Series A funding?"<br />• "Is the company in the healthcare industry?" | • "What is the CEO's name?"<br />• "What is the company's revenue?"<br />• "What products does the company offer?" |
+
+### Why This Separation Matters
+
+This two-stage approach is efficient and cost-effective:
+
+1. **Filter first**: Match conditions quickly narrow down candidates to relevant matches
+2. **Enrich selectively**: Extract detailed data only from the matches that matter
+
+This means you don't pay to enrich hundreds of candidates that won't match your criteria.
+
+## Adding Enrichments
+
+Enrichments can be added anytime after a FindAll run is created, even for completed runs. Once added:
+
+* Enrichments will run on **all matches** (both ones that exist when the request is made and all future matches)
+* If enrichments are present, **extend** will also perform the same set of enrichments on all extended matches
+
+## Creating Enrichments
+
+<Info>
+  **Task API Concepts Apply Here**: Enrichments use the same [task spec](/task-api/guides/specify-a-task) structure as Task API runs. You'll define:
+
+  * **[Processors](/task-api/guides/choose-a-processor)**: Choose from `base`, `advanced`, or `auto` (same as Task API)
+  * **[Output Schema](/task-api/guides/specify-a-task#output-schema)**: Define structured JSON output (same format as Task API)
+  * **[Pricing](/task-api/guides/execute-task-run#pricing)**: Charged according to Task API processor pricing
+
+  The only difference: you don't need to define `input_schema`—it's automatically set to the candidate's `name`, `url`, and `description`.
+</Info>
+
+### Quick Example
+
+```bash  theme={"system"}
+curl -X POST "https://api.parallel.ai/v1beta/findall/runs/{run_id}/enrich" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "generator": "core",
+    "output_schema": {
+      "type": "json",
+      "json_schema": {
+        "type": "object",
+        "properties": {
+          "ceo_name": {
+            "type": "string",
+            "description": "Name of the CEO"
+          },
+          "founding_year": {
+            "type": "string",
+            "description": "Year the company was founded"
+          }
+        },
+        "required": ["ceo_name", "founding_year"],
+        "additionalProperties": false
+      }
+    }
+  }'
+```
+
+## Retrieving Enrichment Results
+
+You can access enrichment results through multiple methods:
+
+* **[Streaming Events](/findall-api/features/findall-sse)** (`/events`): Enrichment results stream in real-time as they complete
+* **[Webhooks](/findall-api/features/findall-webhook)**: Subscribe to `findall.candidate.enriched` events to receive enrichment results via HTTP callbacks
+* **Result endpoint** (`/result`): Enrichment data is included when fetching the final results of a FindAll run
+
+<Note>
+  Enrichment data is added to the candidate's `output` object with `type: "enrichment"`. See [Candidates](/findall-api/core-concepts/findall-candidates) for details on how enrichments appear in the candidate structure.
+</Note>
+
+## Related Topics
+
+### Task API Foundation
+
+Enrichments are built on Task API, so these guides will help you understand how they work:
+
+* **[Task API Quickstart](/task-api/task-quickstart)**: Learn the Task API that powers enrichments
+* **[Specify a Task](/task-api/guides/specify-a-task)**: Master task\_spec structure and best practices
+* **[Choose a Task Processor](/task-api/guides/choose-a-processor)**: Understand Task API processor options
+* **[Execute Task Runs](/task-api/guides/execute-task-run)**: Learn about pricing and execution patterns
+
+### FindAll Features
+
+* **[Preview](/findall-api/features/findall-preview)**: Test queries with \~10 candidates before running full searches
+* **[Extend Runs](/findall-api/features/findall-extend)**: Increase match limits without paying new fixed costs
+* **[Streaming Events](/findall-api/features/findall-sse)**: Receive real-time updates via Server-Sent Events
+* **[Webhooks](/findall-api/features/findall-webhook)**: Configure HTTP callbacks for run completion and matches
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: Understand run statuses and how to cancel runs
+* **[API Reference](https://docs.parallel.ai/api-reference/findall-api-beta/add-enrichment-to-findall-run)**: Complete endpoint documentation
+
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://docs.parallel.ai/llms.txt
+
+
+# Extend
+
+> Increase the match limit of existing FindAll runs to get more results without changing query criteria
+
+## Overview
+
+Extend allows you to increase the `match_limit` of an existing FindAll run to get more results using the same evaluation criteria—without paying the fixed cost again. Start with a small limit (10-20) to validate your criteria, then extend to get more matches.
+
+```bash  theme={"system"}
+curl -X POST "https://api.parallel.ai/v1beta/findall/runs/{findall_id}/extend" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15" \
+  -H "Content-Type: application/json" \
+  -d '{ "additional_match_limit": 40 }'
+```
+
+### How Extend Works
+
+* **Increases match limit:** The `additional_match_limit` you set is the **incremental** number of matches to add (not the total). For example, to go from 10 to 50 matches, set `additional_match_limit: 40`, not `50`.
+* **Continues the same evaluation:** All other parameters—**processor**, **filters**, **enrichments**, and **match conditions**—stay exactly the same as the original run.
+* **Handles run status automatically:**
+  * If the run is *active*, it continues seamlessly up to the new match limit.
+  * If the run is *completed*, it automatically "respawns" and resumes until reaching the new limit.
+* **Pricing:** Extending has **no fixed cost—you only pay for the additional matches beyond the original run**. For example, extending from 10 to 100 matches means paying for 90 additional matches (plus evaluation costs).
+
+### Limitations
+
+* **Preview runs:** Cannot be extended. Use a full generator (`base`, `core`, or `pro`) if you plan to extend.
+* **Fixed parameters:** Cannot modify processor, filters, enrichments, or match conditions. Start a new run to change criteria.nerator
+* **Candidate reuse:** May process previously evaluated candidates before finding new ones. Start a new run for time-sensitive searches.
+
+## Related Topics
+
+* **[Preview](/findall-api/features/findall-preview)**: Test queries with \~10 candidates before running full searches
+* **[Generators and Pricing](/findall-api/core-concepts/findall-generator-pricing)**: Understand generator options and pricing
+* **[Enrichments](/findall-api/features/findall-enrich)**: Extract additional structured data for matched candidates
+* **[Streaming Events](/findall-api/features/findall-sse)**: Receive real-time updates via Server-Sent Events
+* **[Webhooks](/findall-api/features/findall-webhook)**: Configure HTTP callbacks for run completion and matches
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: Understand run statuses and how to cancel runs
+* **[API Reference](https://docs.parallel.ai/api-reference/findall-api-beta/extend-findall-run)**: Complete endpoint documentation
+
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://docs.parallel.ai/llms.txt
+
+
+
+# Refresh Runs
+
+> Rerun the same FindAll query with exclude_list to discover net new entities over time
+
+## Overview
+
+Scheduled jobs allow you to run the same FindAll query on a regular basis to discover newly emerging entities and track changes to existing ones. This is ideal for ongoing monitoring use cases like market intelligence, lead generation, or competitive tracking.
+
+Rather than manually re-running queries, you can programmatically create new FindAll runs using a previous run's schema, while excluding candidates you've already discovered.
+
+## Use Cases
+
+Scheduled FindAll jobs are particularly useful for:
+
+* **Market monitoring**: Track new companies entering a market space over time
+* **Lead generation**: Continuously discover new potential customers matching your criteria
+* **Competitive intelligence**: Monitor emerging competitors and new funding announcements
+* **Investment research**: Track new companies meeting specific investment criteria
+* **Regulatory compliance**: Discover new entities that may require compliance review
+
+## How It Works
+
+Creating a scheduled FindAll job involves two steps:
+
+1. **Retrieve the schema** from a previous successful run
+2. **Create a new run** using that schema, with an exclude list of previously discovered candidates
+
+This approach ensures:
+
+* **Consistent criteria**: Use the exact same evaluation logic across runs
+* **No duplicates**: Automatically exclude candidates from previous runs
+* **Cost efficiency**: Only pay to evaluate net new candidates
+
+## Step 1: Retrieve the Schema
+
+Get the schema from a completed FindAll run to reuse its `entity_type`, `match_conditions`, and `enrichments`:
+
+```bash cURL theme={"system"}
+curl -X GET "https://api.parallel.ai/v1beta/findall/runs/${FINDALL_ID}/schema" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15"
+```
+
+**Response:**
+
+```json  theme={"system"}
+{
+  "objective": "Find all portfolio companies of Khosla Ventures founded after 2020",
+  "entity_type": "companies",
+  "match_conditions": [
+    {
+      "name": "khosla_ventures_portfolio_check",
+      "description": "Company must be a portfolio company of Khosla Ventures."
+    },
+    {
+      "name": "founded_after_2020_check",
+      "description": "Company must have been founded after 2020."
+    }
+  ],
+  "enrichments": [
+    {
+      "name": "funding_amount",
+      "description": "Total funding raised by the company in USD"
+    }
+  ],
+  "generator": "core",
+  "match_limit": 50
+}
+```
+
+## Step 2: Create a New Run with `exclude_list`
+
+Use the retrieved schema to create a new FindAll run, adding an `exclude_list` parameter to skip candidates you've already discovered:
+
+```bash cURL theme={"system"}
+curl -X POST "https://api.parallel.ai/v1beta/findall/runs" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objective": "Find all portfolio companies of Khosla Ventures founded after 2020",
+    "entity_type": "companies",
+    "match_conditions": [
+      {
+        "name": "khosla_ventures_portfolio_check",
+        "description": "Company must be a portfolio company of Khosla Ventures."
+      },
+      {
+        "name": "founded_after_2020_check",
+        "description": "Company must have been founded after 2020."
+      }
+    ],
+    "enrichments": [
+      {
+        "name": "funding_amount",
+        "description": "Total funding raised by the company in USD"
+      }
+    ],
+    "generator": "core",
+    "match_limit": 50,
+    "exclude_list": [
+      {
+        "name": "Anthropic",
+        "url": "https://www.anthropic.com/"
+      },
+      {
+        "name": "Adept AI",
+        "url": "https://adept.ai/"
+      },
+      {
+        "name": "Liquid AI",
+        "url": "https://www.liquid.ai/"
+      }
+    ]
+  }'
+```
+
+### Exclude List Parameters
+
+The `exclude_list` is an array of candidate objects to exclude. Each object contains:
+
+| Parameter | Type   | Required | Description                      |
+| --------- | ------ | -------- | -------------------------------- |
+| `name`    | string | Yes      | Name of the candidate to exclude |
+| `url`     | string | Yes      | URL of the candidate to exclude  |
+
+**How exclusions work:**
+
+* Candidates matching any entry in the `exclude_list` will be skipped during generation
+* This prevents re-evaluating entities you've already processed
+* Exclusions are matched by URL—ensure URLs are normalized consistently across runs
+
+## Building Your Exclude List
+
+To construct the `exclude_list` from previous runs, retrieve the matched candidates and extract their `name` and `url` fields:
+
+```bash cURL theme={"system"}
+curl -X GET "https://api.parallel.ai/v1beta/findall/runs/${FINDALL_ID}/result" \
+  -H "x-api-key: $PARALLEL_API_KEY" \
+  -H "parallel-beta: findall-2025-09-15"
+```
+
+Extract the `name` and `url` fields from each matched candidate:
+
+```json  theme={"system"}
+{
+  "findall_id": "findall_40e0ab8c10754be0b7a16477abb38a2f",
+  "matched_candidates": [
+    {
+      "candidate_id": "candidate_abc123",
+      "name": "Anthropic",
+      "url": "https://www.anthropic.com/",
+      "match_status": "matched",
+      ...
+    },
+    {
+      "candidate_id": "candidate_def456",
+      "name": "Adept AI",
+      "url": "https://adept.ai/",
+      "match_status": "matched",
+      ...
+    }
+  ]
+}
+```
+
+Store these candidates and pass them as the `exclude_list` array in subsequent runs.
+
+## Example: Weekly Scheduled Job
+
+Here's a complete example showing how to set up a weekly FindAll job:
+
+<CodeGroup>
+  ```python Python theme={"system"}
+  import requests
+  import time
+  from datetime import datetime
+
+  PARALLEL_API_KEY = "your_api_key"
+  BASE_URL = "https://api.parallel.ai/v1beta"
+  HEADERS = {
+      "x-api-key": PARALLEL_API_KEY,
+      "parallel-beta": "findall-2025-09-15",
+      "Content-Type": "application/json"
+  }
+
+  # Store the original findall_id from your first run
+  ORIGINAL_FINDALL_ID = "findall_40e0ab8c10754be0b7a16477abb38a2f"
+
+  # Keep track of all discovered candidates across runs
+  all_discovered_candidates = []
+
+  def get_schema(findall_id):
+      """Retrieve schema from a previous run"""
+      response = requests.get(
+          f"{BASE_URL}/findall/runs/{findall_id}/schema",
+          headers=HEADERS
+      )
+      response.raise_for_status()
+      return response.json()
+
+  def get_matched_candidates(findall_id):
+      """Get all matched candidates from a run"""
+      response = requests.get(
+          f"{BASE_URL}/findall/runs/{findall_id}/result",
+          headers=HEADERS
+      )
+      response.raise_for_status()
+      return response.json().get("matched_candidates", [])
+
+  def create_scheduled_run(schema, exclude_candidates):
+      """Create a new FindAll run with exclusions"""
+      payload = {
+          **schema,
+          "generator": "core",
+          "match_limit": 50,
+          "exclude_list": exclude_candidates
+      }
+
+      response = requests.post(
+          f"{BASE_URL}/findall/runs",
+          headers=HEADERS,
+          json=payload
+      )
+      response.raise_for_status()
+      return response.json()["findall_id"]
+
+  def run_weekly_job():
+      """Execute a scheduled FindAll job"""
+      print(f"Starting scheduled job at {datetime.now()}")
+
+      # Step 1: Get schema from original run
+      schema = get_schema(ORIGINAL_FINDALL_ID)
+      print(f"Retrieved schema: {schema['objective']}")
+
+      # Step 2: Create new run with exclusions
+      new_findall_id = create_scheduled_run(schema, all_discovered_candidates)
+      print(f"Created new run: {new_findall_id}")
+
+      # Step 3: Poll for completion (simplified)
+      while True:
+          response = requests.get(
+              f"{BASE_URL}/findall/runs/{new_findall_id}",
+              headers=HEADERS
+          )
+          status = response.json()["status"]["status"]
+
+          if status in ["completed", "failed", "cancelled"]:
+              break
+
+          time.sleep(30)  # Poll every 30 seconds
+
+      # Step 4: Get new matched candidates
+      new_candidates = get_matched_candidates(new_findall_id)
+      print(f"Found {len(new_candidates)} new candidates")
+
+      # Step 5: Update exclude list for next run
+      for candidate in new_candidates:
+          all_discovered_candidates.append({
+              "name": candidate["name"],
+              "url": candidate["url"]
+          })
+
+      return new_candidates
+
+  # Run the job
+  if __name__ == "__main__":
+      new_results = run_weekly_job()
+  ```
+
+  ```typescript TypeScript theme={"system"}
+  import axios from 'axios';
+
+  const PARALLEL_API_KEY = 'your_api_key';
+  const BASE_URL = 'https://api.parallel.ai/v1beta';
+  const HEADERS = {
+    'x-api-key': PARALLEL_API_KEY,
+    'parallel-beta': 'findall-2025-09-15',
+    'Content-Type': 'application/json',
+  };
+
+  // Store the original findall_id from your first run
+  const ORIGINAL_FINDALL_ID = 'findall_40e0ab8c10754be0b7a16477abb38a2f';
+
+  // Keep track of all discovered candidates across runs
+  let allDiscoveredCandidates: Array<{ name: string; url: string }> = [];
+
+  async function getSchema(findallId: string) {
+    const response = await axios.get(
+      `${BASE_URL}/findall/runs/${findallId}/schema`,
+      { headers: HEADERS }
+    );
+    return response.data;
+  }
+
+  async function getMatchedCandidates(findallId: string) {
+    const response = await axios.get(
+      `${BASE_URL}/findall/runs/${findallId}/result`,
+      { headers: HEADERS }
+    );
+    return response.data.matched_candidates || [];
+  }
+
+  async function createScheduledRun(
+    schema: any,
+    excludeCandidates: Array<{ name: string; url: string }>
+  ) {
+    const payload = {
+      ...schema,
+      generator: 'core',
+      match_limit: 50,
+      exclude_list: excludeCandidates,
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}/findall/runs`,
+      payload,
+      { headers: HEADERS }
+    );
+    return response.data.findall_id;
+  }
+
+  async function runWeeklyJob() {
+    console.log(`Starting scheduled job at ${new Date()}`);
+
+    // Step 1: Get schema from original run
+    const schema = await getSchema(ORIGINAL_FINDALL_ID);
+    console.log(`Retrieved schema: ${schema.objective}`);
+
+    // Step 2: Create new run with exclusions
+    const newFindallId = await createScheduledRun(schema, allDiscoveredCandidates);
+    console.log(`Created new run: ${newFindallId}`);
+
+    // Step 3: Poll for completion
+    let status = 'running';
+    while (!['completed', 'failed', 'cancelled'].includes(status)) {
+      await new Promise(resolve => setTimeout(resolve, 30000)); // Wait 30 seconds
+
+      const response = await axios.get(
+        `${BASE_URL}/findall/runs/${newFindallId}`,
+        { headers: HEADERS }
+      );
+      status = response.data.status.status;
+    }
+
+    // Step 4: Get new matched candidates
+    const newCandidates = await getMatchedCandidates(newFindallId);
+    console.log(`Found ${newCandidates.length} new candidates`);
+
+    // Step 5: Update exclude list for next run
+    newCandidates.forEach((candidate: any) => {
+      allDiscoveredCandidates.push({
+        name: candidate.name,
+        url: candidate.url,
+      });
+    });
+
+    return newCandidates;
+  }
+
+  // Run the job
+  runWeeklyJob();
+  ```
+</CodeGroup>
+
+## Best Practices
+
+### Schema Modifications
+
+While you should keep `match_conditions` consistent across runs, you can adjust:
+
+* **`objective`**: Update to reflect the current time period (e.g., "founded in 2024" → "founded in 2025")
+* **`enrichments`**: Add new enrichment fields without affecting matching logic
+* **`match_limit`**: Adjust based on expected growth rate
+* **`generator`**: Change generators if needed (though this may affect result quality)
+
+### Exclude List Management
+
+* **Persist candidates**: Store discovered candidate objects (name and URL) in a database or file for long-term tracking
+* **Normalize URLs**: Ensure consistent URL formatting (trailing slashes, protocols, etc.) across runs
+* **Periodic resets**: Consider occasionally running without exclusions to catch entities that may have changed
+* **Monitor list size**: Very large exclude lists (>10,000 candidates) may impact performance
+
+### Scheduling
+
+* **Frequency**: Choose intervals based on your domain's update rate (daily, weekly, monthly)
+* **Off-peak hours**: Schedule jobs during low-traffic periods if possible
+* **Webhooks**: Use [webhooks](/findall-api/features/findall-webhook) to get notified when jobs complete
+* **Error handling**: Implement retry logic for failed runs
+
+### Cost Optimization
+
+* **Start small**: Use lower `match_limit` values initially, then [extend](/findall-api/features/findall-extend) if needed
+* **Preview first**: Test schema changes with [preview](/findall-api/features/findall-preview) before running full jobs
+* **Monitor metrics**: Track `generated_candidates_count` vs `matched_candidates_count` to optimize criteria
+
+## Related Topics
+
+* **[Preview](/findall-api/features/findall-preview)**: Test queries with \~10 candidates before running full searches
+* **[Generators and Pricing](/findall-api/core-concepts/findall-generator-pricing)**: Understand generator options and pricing
+* **[Enrichments](/findall-api/features/findall-enrich)**: Extract additional structured data for matched candidates
+* **[Extend Runs](/findall-api/features/findall-extend)**: Increase match limits without paying new fixed costs
+* **[Webhooks](/findall-api/features/findall-webhook)**: Configure HTTP callbacks for run completion and matches
+* **[Streaming Events](/findall-api/features/findall-sse)**: Receive real-time updates via Server-Sent Events
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: Understand run statuses and how to cancel runs
+* **[API Reference](https://docs.parallel.ai/api-reference/findall-api-beta/get-findall-schema)**: Complete endpoint documentation
+
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://docs.parallel.ai/llms.txt
+
+
+
+# Generators and Pricing
+
+> FindAll API pricing structure and generators
+
+FindAll offers different generators that determine both the quality and cost of FindAll run result.
+
+## Generators
+
+| Generator | Fixed Cost | Per Match | Best For                                                  |
+| --------- | ---------- | --------- | --------------------------------------------------------- |
+| `base`    | \$0.25     | \$0.03    | Broad, common queries where you expect many matches       |
+| `core`    | \$2.00     | \$0.15    | Specific queries with moderate expected matches           |
+| `pro`     | \$10.00    | \$1.00    | Highly specific queries with rare or hard-to-find matches |
+| `preview` | \$0.10     | \$0.00    | Testing queries (\~10 candidates)                         |
+
+### Cost Formula
+
+The total cost of a FindAll run includes the generator costs plus any enrichment costs:
+
+<div align="right">
+  $$
+  \begin{aligned}
+  \text{total cost} &= \text{fixed cost} + (\text{cost per match} \times \text{\# matches}) \\
+                    &\quad + \sum (\text{enrichment processor cost} \times \text{\# matches})
+  \end{aligned}
+  $$
+</div>
+
+**Where:**
+
+* **Fixed cost** and **cost per match** come from your chosen generator (`base`, `core`, or `pro`)
+* **Enrichment processor cost** is determined by the [Task API processor](/task-api/guides/choose-a-processor) you select for each [enrichment](/findall-api/features/findall-enrich)
+* The enrichment sum applies across all enrichments you add (you can add multiple enrichments using different processors)
+
+### Examples
+
+All examples assume 50 matches:
+
+| FindAll Generator | Enrichment Processors | Generator Cost                  | Enrichment Cost                         | Total Cost  |
+| ----------------- | --------------------- | ------------------------------- | --------------------------------------- | ----------- |
+| `base`            | None                  | \$0.25 + (50 × \$0.03) = \$1.75 | \$0.00                                  | **\$1.75**  |
+| `base`            | 1 `lite`              | \$0.25 + (50 × \$0.03) = \$1.75 | 50 × \$0.005 = \$0.25                   | **\$2.00**  |
+| `core`            | None                  | \$2 + (50 × \$0.15) = \$9.50    | \$0.00                                  | **\$9.50**  |
+| `core`            | 1 `base`, 1 `lite`    | \$2 + (50 × \$0.15) = \$9.50    | (50 × \$0.01) + (50 × \$0.005) = \$0.75 | **\$10.25** |
+| `pro`             | None                  | \$10 + (50 × \$1.00) = \$60.00  | \$0.00                                  | **\$60.00** |
+| `pro`             | 2 `core`              | \$10 + (50 × \$1.00) = \$60.00  | 2 × (50 × \$0.025) = \$2.50             | **\$62.50** |
+
+## How to Choose
+
+### 1. Start with Preview
+
+Always test your query with `preview` first to validate your approach and get a sense of how many matches to expect. See [Preview](/findall-api/features/findall-preview).
+
+### 2. Choosing the Right Generator
+
+Based on your preview results and query characteristics:
+
+**Choose `base` when:**
+
+* You expect many matches (e.g., "companies in healthcare")
+* Your query has broad criteria that are common
+* You're searching for fewer than 20 matches where the low fixed cost matters most
+
+**Choose `core` when:**
+
+* You expect a moderate number of matches (e.g., "healthcare companies using AI for diagnostics")
+* Your query is fairly specific but not extremely rare
+* You need between 20-50 matches
+
+**Choose `pro` when:**
+
+* You expect few matches or very specific criteria (e.g., "Series A healthcare AI companies with FDA-approved products")
+* Your query requires the most thorough and comprehensive search
+* The higher per-match cost is acceptable for your use case
+
+**Note:** For match counts above 50, the per-match cost becomes more significant than the fixed cost in your total bill. When using enrichments, consider that enrichment costs also scale with the number of matches.
+
+## Enrichment Pricing Considerations
+
+When adding [enrichments](/findall-api/features/findall-enrich) to extract additional data from your matches, each enrichment adds its own per-match cost based on the [Task API processor](/task-api/guides/choose-a-processor) you choose:
+
+* **`lite` processor**: \$0.005 per match (best for simple data extraction)
+* **`base` processor**: \$0.01 per match (reliable for standard enrichments)
+* **`core` processor**: \$0.025 per match (for cross-referenced data)
+* **`core2x` processor**: \$0.05 per match (for high-complexity cross-referenced data)
+* **`pro` processor**: \$0.10 per match (for exploratory research)
+* **`ultra` processor**: \$0.30 per match (for deep research)
+
+Since enrichments run on every match and you can add multiple enrichments, they can significantly impact your total costs for high-match queries. Choose enrichment processors based on the complexity of data extraction needed.
+
+## Additional Notes
+
+* **[Extend Runs](/findall-api/features/findall-extend)**: Fixed cost is not charged again, only per-match costs for new matches. If enrichments are present, they also run on new matches at the same enrichment processor cost.
+* **[Enrichments](/findall-api/features/findall-enrich)**: Enrichments are charged based on [Task API processor pricing](/task-api/guides/choose-a-processor) × number of matches. You can add multiple enrichments using different processors, and each enrichment's cost is calculated separately.
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: You're charged for work completed before cancellation, including any enrichments that finished.
+
+**Tip:** If a run terminates early, consider using a more advanced generator (like `pro` instead of `base`) or refining your query criteria to be more achievable.
+
+## Related Topics
+
+* **[Preview](/findall-api/features/findall-preview)**: Test queries with \~10 candidates before running full searches
+* **[Enrichments](/findall-api/features/findall-enrich)**: Extract additional structured data for matched candidates
+* **[Task API Processors](/task-api/guides/choose-a-processor)**: Understand processor options and pricing for enrichments
+* **[Extend Runs](/findall-api/features/findall-extend)**: Increase match limits without paying new fixed costs
+* **[Streaming Events](/findall-api/features/findall-sse)**: Receive real-time updates via Server-Sent Events
+* **[Webhooks](/findall-api/features/findall-webhook)**: Configure HTTP callbacks for run completion and matches
+* **[Run Lifecycle](/findall-api/core-concepts/findall-lifecycle)**: Understand run statuses and how to cancel runs
+* **[API Reference](https://docs.parallel.ai/api-reference/findall-api-beta/create-findall-run#body-generator)**: Complete endpoint documentation
+
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://docs.parallel.ai/llms.txt
+
+
+
+

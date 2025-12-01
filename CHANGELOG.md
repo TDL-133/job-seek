@@ -1,6 +1,36 @@
 # Changelog - Job Seek
 
-## [2025-11-28] - Latest: Firecrawl & BrightData Integration
+## [2025-11-30] - Latest: WTTJ Phase 1 Optimization
+
+### 🎯 WTTJ Title + Location Filtering
+- **Two-stage filtering** for WTTJ search results in Phase 1:
+  1. **Title Filtering**: Keyword-based matching (≥2 terms) with Firecrawl highlight stripping
+  2. **Location Filtering**: URL slug + HTML context validation with city whitelist
+- **Results**: Marseille query reduced from 31 jobs → 2 relevant jobs (100% Marseille-based Customer Success)
+- **City Whitelist**: 50+ French cities for location validation
+- **Regional Support**: Nearby cities for Marseille (Aix-en-Provence, Aubagne, Salon)
+- **Smart Rejection**: Explicitly rejects jobs with different cities in URL slug
+
+### 📚 Documentation
+- Created `docs/PHASE1_WTTJ_OPTIMIZATION.md` - Complete WTTJ filtering guide
+- Documents filtering stages, configuration, results, and limitations
+- Includes customization points and future improvements
+
+### 🛠️ Technical Changes
+- **New method**: `_match_job_title()` in `parallel_scraper.py` - Title keyword matching
+- **Enhanced method**: `_firecrawl_search_wttj()` - Now includes location validation
+- **Location extraction**: Markdown parsing + HTML proximity mapping
+- **Stop words**: French job terms (CDI, Stage, Alternance, H/F)
+
+### 📊 Performance
+- **Before**: 31 WTTJ jobs (mixed titles and locations)
+- **After Title Filter**: 8 jobs (Customer Success only)
+- **After Location Filter**: 2 jobs (Marseille only)
+- **Accuracy**: 100% precision for Marseille Customer Success jobs
+
+---
+
+## [2025-11-28] - Firecrawl & BrightData Integration
 
 ### 🚀 Enhanced Scraping
 - **ScrapingService** (`src/services/scraping_service.py`) with 3-tier fallback:

@@ -1,0 +1,50 @@
+================================================================================
+APIFY JOB ENHANCEMENT REPORT
+================================================================================
+
+Generated: 2025-11-30 17:14:08
+CSV File: /Users/lopato/Documents/DAGORSEY/Geek/Job Seek/scripts/job_scraping_test/phase2_jobs.csv
+Actor: apify/rag-web-browser
+
+================================================================================
+OVERALL STATISTICS
+================================================================================
+Total Jobs: 75
+Processed: 32
+Enhanced: 2
+Skipped: 43
+Errors: 30
+
+Enhancement Rate: 6.2% (2/32)
+
+================================================================================
+BY PLATFORM
+================================================================================
+
+Glassdoor:
+  Processed: 30
+  Enhanced: 0
+  Errors: 30
+  Success Rate: 0.0%
+
+WTTJ:
+  Processed: 2
+  Enhanced: 2
+  Errors: 0
+  Success Rate: 100.0%
+
+================================================================================
+NEW COLUMNS ADDED
+================================================================================
+- apify_title: Job title extracted by Apify
+- apify_company: Company name extracted by Apify
+- apify_location: City/location extracted by Apify
+- apify_confidence: Extraction confidence (high/medium/low)
+- apify_run_id: Apify Actor run ID for traceability
+
+================================================================================
+PROCESSING SUMMARY
+================================================================================
+ENHANCED: 2
+ERROR: 30
+SKIPPED: 43

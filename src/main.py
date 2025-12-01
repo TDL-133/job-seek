@@ -5,8 +5,8 @@ from contextlib import asynccontextmanager
 import os
 
 from .models import Base, engine
-from .routers import jobs, applications, companies, search, preferences
-from .routers import auth, profile, criteria, blacklist
+from .routers import jobs, applications, companies, preferences, search_findall
+from .routers import auth, profile, criteria, blacklist, saved_searches
 
 
 @asynccontextmanager
@@ -37,12 +37,13 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(profile.router, prefix="/api/profile", tags=["Profile"])
 app.include_router(criteria.router, prefix="/api/criteria", tags=["Scoring Criteria"])
 app.include_router(blacklist.router, prefix="/api/blacklist", tags=["Blacklist"])
+app.include_router(saved_searches.router, prefix="/api/saved-searches", tags=["Saved Searches"])
 
 # Include routers - Jobs & Search
 app.include_router(jobs.router, prefix="/api/jobs", tags=["Jobs"])
 app.include_router(applications.router, prefix="/api/applications", tags=["Applications"])
 app.include_router(companies.router, prefix="/api/companies", tags=["Companies"])
-app.include_router(search.router, prefix="/api/search", tags=["Search"])
+app.include_router(search_findall.router, prefix="/api/search", tags=["Search (FindAll)"])
 app.include_router(preferences.router, prefix="/api/preferences", tags=["Preferences"])
 
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
+import { MainLayout } from '../components/layout/MainLayout';
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -63,7 +64,8 @@ export default function Onboarding() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-primary-50 px-4 py-10">
+    <MainLayout>
+    <div className="bg-gradient-to-br from-neutral-50 to-primary-50 px-4 py-10 min-h-[calc(100vh-4rem)]">
       <div className="max-w-2xl mx-auto">
         {/* Progress indicator */}
         <div className="flex items-center justify-center mb-8">
@@ -206,5 +208,6 @@ export default function Onboarding() {
         </div>
       </div>
     </div>
+    </MainLayout>
   );
 }

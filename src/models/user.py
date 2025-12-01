@@ -23,6 +23,7 @@ class User(Base):
     scoring_preferences = relationship("UserScoringPreferences", back_populates="user", uselist=False)
     blacklist = relationship("Blacklist", back_populates="user")
     email_alert = relationship("EmailAlert", back_populates="user", uselist=False)
+    saved_searches = relationship("SavedSearch", back_populates="user")
     
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -144,6 +144,7 @@ Tests use in-memory SQLite via `tests/conftest.py`
 - Jobs V2: `/api/jobs/scored/v2` (V2 scoring with breakdown)
 - Search: `/api/search/jobs` (standard search)
 - Search SSE: `/api/search/jobs/stream` (real-time streaming search)
+- FindAll Status: `/api/search/status/{findall_id}` (polling for background search status)
 
 ## Frontend URLs
 - Landing: `/`
@@ -175,14 +176,14 @@ Password: admin12345678
 
 See `docs/SCORING_V2.md` for full documentation.
 
-### Real-Time Job Search
+### Real-Time Job Search (FindAll)
 - Search Panel with keywords + location inputs
-- Server-Sent Events (SSE) streaming
-- Live platform scanning progress (LinkedIn, Indeed, Glassdoor, WTTJ)
-- Display ALL jobs with matched/unmatched tags
-- ✅ Match (score ≥ 40) - green border
-- 📋 À revoir (score < 40) - grey border, faded
-- Toggle to show/hide unmatched jobs
+- Server-Sent Events (SSE) streaming for real-time progress
+- **Persistent tracking**: Progress saved to localStorage (`jobseek_active_findall`)
+- **Background polling**: If SSE disconnects, polls `/api/search/status/{id}` every 5s
+- **Resume capability**: Returns results even if page was refreshed during search
+- Live stats: generated candidates count + matched offers count
+- Job cards with circular score ring (Excellent/Bien/Moyen/Faible)
 
 ## Color Scheme
 Primary: Coral/Terracotta (#e07a5f / #c85544)

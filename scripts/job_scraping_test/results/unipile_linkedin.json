@@ -1,0 +1,407 @@
+{
+  "items": [
+    {
+      "type": "JOB",
+      "id": "4337492647",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Product Manager ",
+      "location": "Greater Toulouse Metropolitan Area (Hybrid)",
+      "posted_at": "2025-11-21T09:07:05.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4337492647",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "29345203",
+        "name": "5 Degr\u00e9s",
+        "public_identifier": "5degres",
+        "profile_url": "https://www.linkedin.com/company/5degres",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQHsWtvrS3vP2A/company-logo_200_200/company-logo_200_200/0/1709194497416/5degres_logo?e=1766016000&v=beta&t=JIHgs-kBMOeacLgZ4PldjRWDqH8H2vaaeDWUcSu-hDo"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4308964384",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Product Manager - CDI",
+      "location": "Toulouse, Occitanie, France (Hybrid)",
+      "posted_at": "2025-10-01T13:11:09.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4308964384",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "69713279",
+        "name": "Collective.work",
+        "public_identifier": "usecollective",
+        "profile_url": "https://www.linkedin.com/company/usecollective",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQFEckvgRHvOkA/company-logo_200_200/company-logo_200_200/0/1631718407504/usecollective_logo?e=1766016000&v=beta&t=5dOc_VYIG1QA6uBgCNncyP5gDwfZVAEvw0AxInJBLTU"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4293730473",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Product manager H/F",
+      "location": "Toulouse, Occitanie, France (Hybrid)",
+      "posted_at": "2025-11-24T10:55:14.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4293730473",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "9485372",
+        "name": "Kicklox",
+        "public_identifier": "kicklox",
+        "profile_url": "https://www.linkedin.com/company/kicklox",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4D0BAQH1M6OIj1J2-g/company-logo_200_200/company-logo_200_200/0/1630510810667/makake_logo?e=1766016000&v=beta&t=fNytCqWzueztlhYTqqmdz6iEVQgkkQ6v-78toCPb3f0"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4347803067",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Product Owner/ Product Manager H/F",
+      "location": "Toulouse, Occitanie, France (On-site)",
+      "posted_at": "2025-11-28T09:32:28.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4347803067",
+      "promoted": false,
+      "easy_apply": true,
+      "company": {
+        "id": "5322",
+        "name": "ALTEN",
+        "public_identifier": "alten",
+        "profile_url": "https://www.linkedin.com/company/alten",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4D0BAQGAwCVecKTlvg/company-logo_200_200/company-logo_200_200/0/1715246536817/alten_logo?e=1766016000&v=beta&t=zsqDa3Sh5ohkdQeuWivHp4eZIeZwAdasmMDlqmW-EwU"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4312818294",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "RESPONSABLE MARCH\u00c9S/PRODUITS - PRODUCT MANAGER - H/F",
+      "location": "Toulouse, Occitanie, France (On-site)",
+      "posted_at": "2025-10-10T00:00:00.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4312818294",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "1521705",
+        "name": "CLS Group (Collecte Localisation Satellites)",
+        "public_identifier": "cls",
+        "profile_url": "https://www.linkedin.com/company/cls",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQH-uiyEefBHUg/company-logo_200_200/company-logo_200_200/0/1630657996492/cls_logo?e=1766016000&v=beta&t=rquw7tc8Z3HS4fTgu-FWrc9RabFYSI4swHi-bIHZrL8"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4284905202",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Technical Product Manager",
+      "location": "Toulouse, Occitanie, France (Remote)",
+      "posted_at": "2025-08-14T01:05:38.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4284905202",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "234280",
+        "name": "Canonical",
+        "public_identifier": "canonical",
+        "profile_url": "https://www.linkedin.com/company/canonical",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQEbIYAkAURcYw/company-logo_200_200/company-logo_200_200/0/1650566107463/canonical_logo?e=1766016000&v=beta&t=p3vFyZM7Q_hhjJ7FaVTKctSkjm9BMJkHSI95PyGdxtc"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4284597030",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Product Manager - Industrial Sector Lead",
+      "location": "Toulouse, Occitanie, France (Remote)",
+      "posted_at": "2025-08-14T01:02:06.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4284597030",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "234280",
+        "name": "Canonical",
+        "public_identifier": "canonical",
+        "profile_url": "https://www.linkedin.com/company/canonical",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQEbIYAkAURcYw/company-logo_200_200/company-logo_200_200/0/1650566107463/canonical_logo?e=1766016000&v=beta&t=p3vFyZM7Q_hhjJ7FaVTKctSkjm9BMJkHSI95PyGdxtc"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4284938535",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Product Manager - Hardware Certification",
+      "location": "Toulouse, Occitanie, France (Remote)",
+      "posted_at": "2025-08-14T01:15:24.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4284938535",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "234280",
+        "name": "Canonical",
+        "public_identifier": "canonical",
+        "profile_url": "https://www.linkedin.com/company/canonical",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQEbIYAkAURcYw/company-logo_200_200/company-logo_200_200/0/1650566107463/canonical_logo?e=1766016000&v=beta&t=p3vFyZM7Q_hhjJ7FaVTKctSkjm9BMJkHSI95PyGdxtc"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4297545222",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "NPD Product Manager F/H",
+      "location": "Toulouse, Occitanie, France (On-site)",
+      "posted_at": "2025-09-08T11:52:12.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4297545222",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "75876903",
+        "name": "GALENIC COSMETICS LABORATORY",
+        "public_identifier": "galenic-cosmetics-laboratory",
+        "profile_url": "https://www.linkedin.com/company/galenic-cosmetics-laboratory",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQFxDBqp4jjWUA/company-logo_200_200/company-logo_200_200/0/1630651458716?e=1766016000&v=beta&t=DbzTTglaVQc6pjZMXXrxWD-VHF6dddE2JJY1-E2l5cE"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4278523267",
+      "reference_id": "B5icTF04UYse1Gab3XQ5SA==",
+      "title": "Manager, Product Manager",
+      "location": "Toulouse, Occitanie, France (Remote)",
+      "posted_at": "2025-07-31T02:54:24.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4278523267",
+      "promoted": false,
+      "easy_apply": false,
+      "company": {
+        "id": "234280",
+        "name": "Canonical",
+        "public_identifier": "canonical",
+        "profile_url": "https://www.linkedin.com/company/canonical",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQEbIYAkAURcYw/company-logo_200_200/company-logo_200_200/0/1650566107463/canonical_logo?e=1766016000&v=beta&t=p3vFyZM7Q_hhjJ7FaVTKctSkjm9BMJkHSI95PyGdxtc"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4347437927",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager IA H/F",
+      "location": "Paris, \u00cele-de-France, France (Hybrid)",
+      "posted_at": "2025-11-25T09:18:11.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4347437927",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "10913636",
+        "name": "Hubvisory",
+        "public_identifier": "hubvisory",
+        "profile_url": "https://www.linkedin.com/company/hubvisory",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D560BAQHJd5On3c-bvw/company-logo_200_200/company-logo_200_200/0/1667399764092/hubvisory_logo?e=1766016000&v=beta&t=D1H7Io1tyxDZfhBBsLY3X5Pq6FMuiHKpNS91RTFEYyg"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4335909026",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Chef(fe) de produit",
+      "location": "Bons-en-Chablais, Auvergne-Rh\u00f4ne-Alpes, France (On-site)",
+      "posted_at": "2025-11-14T14:22:00.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4335909026",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "10430486",
+        "name": "Les 2 Marmottes",
+        "public_identifier": "les-2-marmottes",
+        "profile_url": "https://www.linkedin.com/company/les-2-marmottes",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQFcUxiyhRR-Sw/company-logo_200_200/company-logo_200_200/0/1630620617333/les_2_marmottes_logo?e=1766016000&v=beta&t=SWeeyixGssWMoKl1vUe_9JmZwLTs-Dm0ozzjY9Hu1vc"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4336829622",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager - Spacecraft Operations Software",
+      "location": "Strasbourg, Grand Est, France (On-site)",
+      "posted_at": "2025-11-19T14:04:13.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4336829622",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "68847026",
+        "name": "Leanspace",
+        "public_identifier": "leanspace-sas",
+        "profile_url": "https://www.linkedin.com/company/leanspace-sas",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQF-eS8YhvPdkA/company-logo_200_200/company-logo_200_200/0/1659080460948/leanspace_sas_logo?e=1766016000&v=beta&t=FjvK1-DU9g_IMGRIw7tBi5fKS_cImXYWzfWlBMpXAO0"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4307207227",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Staff AI Product Manager",
+      "location": "Bordeaux, Nouvelle-Aquitaine, France (Hybrid)",
+      "posted_at": "2025-11-13T14:36:56.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4307207227",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "2797328",
+        "name": "Mirakl",
+        "public_identifier": "mirakl",
+        "profile_url": "https://www.linkedin.com/company/mirakl",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C560BAQGnf_BdAnyIpA/company-logo_200_200/company-logo_200_200/0/1631392282664?e=1766016000&v=beta&t=SLRf2zQlPmbIIlB0_LMV-qIFdGBay3xh-sDbEJhkp2U"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4335774666",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager - Deeptech (Machines Sp\u00e9ciales - Robotique)",
+      "location": "Greater Grenoble Metropolitan Area (On-site)",
+      "posted_at": "2025-11-28T00:01:22.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4335774666",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "71855731",
+        "name": "CNS Worldwide Executive Search",
+        "public_identifier": "cns-worldwide",
+        "profile_url": "https://www.linkedin.com/company/cns-worldwide",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQFVFKi49kCnfQ/company-logo_200_200/company-logo_200_200/0/1630614665440?e=1766016000&v=beta&t=RArQGsn5ZwZ3j_7TqWo1l-IA8bQIp9z14uT9Nc589cU"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4317836680",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "[CDI] PM Clinical AI - Paris 10 - 50-70k - H/F",
+      "location": "Paris, \u00cele-de-France, France (Hybrid)",
+      "posted_at": "2025-11-19T14:01:43.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4317836680",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "70435354",
+        "name": "Hirestone",
+        "public_identifier": "hirestone",
+        "profile_url": "https://www.linkedin.com/company/hirestone",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/C4E0BAQH4Dkmmig-emQ/company-logo_200_200/company-logo_200_200/0/1656165633087/hirestone_logo?e=1766016000&v=beta&t=1MhsJRZ5Nz6N4_NnqeDhIpy4jTvNkqm95iZ6OptypCY"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4233143164",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager - Wizz",
+      "location": "Paris, \u00cele-de-France, France (Hybrid)",
+      "posted_at": "2025-11-16T12:06:40.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4233143164",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "5353630",
+        "name": "Voodoo",
+        "public_identifier": "voodoo.io",
+        "profile_url": "https://www.linkedin.com/company/voodoo.io",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQFoMhQ5tM4TLA/company-logo_200_200/company-logo_200_200/0/1693903701647/voodooio_logo?e=1766016000&v=beta&t=iPK_KjV4w204sZPxAYyve2DE8v_DNBI2Fds4sCEGucc"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4267823120",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager",
+      "location": "Paris, \u00cele-de-France, France (On-site)",
+      "posted_at": "2025-11-20T08:58:13.000Z",
+      "benefits": [
+        "\u20ac60K/yr - \u20ac90K/yr"
+      ],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4267823120",
+      "promoted": true,
+      "easy_apply": false,
+      "company": {
+        "id": "37836678",
+        "name": "Riot",
+        "public_identifier": "tryriot",
+        "profile_url": "https://www.linkedin.com/company/tryriot",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQE6UZhKKzzI1g/company-logo_200_200/company-logo_200_200/0/1738596367172/tryriot_logo?e=1766016000&v=beta&t=5dm3mftz092pdEopGdqC6Fz-JDu6xToW1Sd-N89aYD8"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4305559028",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager - CDI Paris - Theodo",
+      "location": "Paris, \u00cele-de-France, France (On-site)",
+      "posted_at": "2025-11-19T12:43:41.000Z",
+      "benefits": [],
+      "reposted": true,
+      "url": "https://www.linkedin.com/jobs/view/4305559028",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "1962680",
+        "name": "Theodo",
+        "public_identifier": "theodo",
+        "profile_url": "https://www.linkedin.com/company/theodo",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQH6lzo3z7uwBA/company-logo_200_200/company-logo_200_200/0/1720022174187/theodo_logo?e=1766016000&v=beta&t=PdRLfOkOrZooAlOnx9MMv2ODCdSuddLDyKYsrQtaeSA"
+      }
+    },
+    {
+      "type": "JOB",
+      "id": "4339087591",
+      "reference_id": "v/nyfFhsQDjqygd11AN14w==",
+      "title": "Product Manager Senior (H/F)",
+      "location": "Greater Montpellier Metropolitan Area (Hybrid)",
+      "posted_at": "2025-11-26T13:02:57.000Z",
+      "benefits": [],
+      "reposted": false,
+      "url": "https://www.linkedin.com/jobs/view/4339087591",
+      "promoted": true,
+      "easy_apply": true,
+      "company": {
+        "id": "11309629",
+        "name": "Weda - Logiciel m\u00e9dical",
+        "public_identifier": "weda-sas",
+        "profile_url": "https://www.linkedin.com/company/weda-sas",
+        "profile_picture_url": "https://media.licdn.com/dms/image/v2/D4E0BAQEQqUNSQsawqw/company-logo_400_400/B4EZmA0TOcKgAc-/0/1758802818341/weda_sas_logo?e=1766016000&v=beta&t=HyEhm0TtvA-DcIBAcgFo-2FWRmvuEWhmjIZQ8Div4uc"
+      }
+    }
+  ],
+  "count": 20
+}

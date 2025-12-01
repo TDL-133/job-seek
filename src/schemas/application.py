@@ -1,19 +1,19 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, field_validator
+from typing import List, Optional, Any
 from datetime import datetime
 from enum import Enum
 
 
 class ApplicationStatusEnum(str, Enum):
-    SAVED = "saved"
-    APPLIED = "applied"
-    PHONE_SCREEN = "phone_screen"
-    INTERVIEW = "interview"
-    TECHNICAL = "technical"
-    FINAL_ROUND = "final_round"
-    OFFER = "offer"
-    REJECTED = "rejected"
-    WITHDRAWN = "withdrawn"
+    SAVED = "SAVED"
+    APPLIED = "APPLIED"
+    PHONE_SCREEN = "PHONE_SCREEN"
+    INTERVIEW = "INTERVIEW"
+    TECHNICAL = "TECHNICAL"
+    FINAL_ROUND = "FINAL_ROUND"
+    OFFER = "OFFER"
+    REJECTED = "REJECTED"
+    WITHDRAWN = "WITHDRAWN"
 
 
 class ApplicationBase(BaseModel):
@@ -67,6 +67,42 @@ class ApplicationResponse(ApplicationBase):
 
 class ApplicationListResponse(BaseModel):
     applications: List[ApplicationResponse]
+    total: int
+    skip: int
+    limit: int
+
+
+class JobSummary(BaseModel):
+    id: int
+    title: str
+    company: Optional[str] = None
+    location: Optional[str] = None
+    source_url: Optional[str] = None
+    source_platform: Optional[str] = None
+    posted_date: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+    @field_validator('company', mode='before')
+    @classmethod
+    def extract_company_name(cls, v: Any) -> Optional[str]:
+        if v is None:
+            return None
+        if isinstance(v, str):
+            return v
+        # If it's a Company object, extract the name
+        if hasattr(v, 'name'):
+            return v.name
+        return str(v)
+
+
+class ApplicationWithJobResponse(ApplicationResponse):
+    job: Optional[JobSummary] = None
+
+
+class ApplicationWithJobListResponse(BaseModel):
+    applications: List[ApplicationWithJobResponse]
     total: int
     skip: int
     limit: int
